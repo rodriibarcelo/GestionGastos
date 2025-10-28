@@ -1,0 +1,13 @@
+[ {
+  "id" : "14294c54-3ee2-4ae3-b935-3a88faefb8ca",
+  "nombre" : "Alimentación",
+  "colorHex" : "#5FBF88"
+}, {
+  "id" : "ff44d1f1-e54f-4f05-8e80-501ef880c085",
+  "nombre" : "Transporte",
+  "colorHex" : "#4C8BF5"
+}, {
+  "id" : "50986d21-04a1-4107-b5ed-d59d7d8a802a",
+  "nombre" : "Ocio",
+  "colorHex" : "#F5A24C"
+} ]

@@ -1,0 +1,9 @@
+[ {
+  "id" : "c0c47f87-20fc-415a-83b8-84ae1eecf5a3",
+  "cantidad" : 6,
+  "fecha" : [ 2025, 10, 28 ],
+  "categoriaId" : "14294c54-3ee2-4ae3-b935-3a88faefb8ca",
+  "nota" : "pan",
+  "cuentaCompartidaId" : null,
+  "personaId" : null
+} ]

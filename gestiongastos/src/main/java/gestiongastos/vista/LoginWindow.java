@@ -76,27 +76,48 @@ public class LoginWindow extends JFrame {
             String password = new String(textPassword.getPassword());
 
             if (usuario.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Introduce usuario y contraseña.",
-                        "Campos vacíos", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Introduce usuario y contraseña.",
+                    "Campos vacíos",
+                    JOptionPane.WARNING_MESSAGE
+                );
                 return;
             }
 
             try {
                 boolean ok = Controlador.getInstance().loginUsuario(usuario, password);
+
                 if (ok) {
-                    JOptionPane.showMessageDialog(this, "Login correcto.", "Éxito",
-                            JOptionPane.INFORMATION_MESSAGE);
-                    // TODO: abre tu ventana principal:
-                    // new MainWindow().setVisible(true);
+                    JOptionPane.showMessageDialog(
+                        this,
+                        "Login correcto.",
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE
+                    );
+
+                    MainWindow main = new MainWindow();
+                    main.setLocationRelativeTo(this);
+                    main.setVisible(true);
+
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.",
-                            "Acceso denegado", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(
+                        this,
+                        "Usuario o contraseña incorrectos.",
+                        "Acceso denegado",
+                        JOptionPane.ERROR_MESSAGE
+                    );
                 }
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error al iniciar sesión: " + ex.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Error al iniciar sesión: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+                );
             }
         });
+
     }
 }
