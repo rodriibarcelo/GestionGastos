@@ -15,42 +15,49 @@ import java.util.UUID;
 public class MainWindow extends JFrame {
 
     private final Controlador ctrl;
+
     private JTable tabla;
     private GastosTableModel model;
 
-    private JComboBox<Categoria> comboCategorias;
+    // === Campos de alta ===
+    private JComboBox<Categoria> comboAltaCategoria;
     private JTextField txtCantidad;
     private JTextField txtFecha;
     private JTextField txtNota;
     private JButton btnAgregar;
 
+    // === Botón de filtros (abre diálogo) ===
+    private JButton btnFiltrar;
+
+    // === Estado inferior ===
+    private JLabel lblTotal;
+    private JLabel lblError;
+
     public MainWindow() {
         this.ctrl = Controlador.getInstance();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Gestión de Gastos");
+        setSize(900, 620);
+        setLocationRelativeTo(null);
+
         configurarUI();
         crearMenu();
         cargarTabla();
     }
 
-
-
     private void configurarUI() {
-        setTitle("Gestión de Gastos");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(800, 600);
-        setLocationRelativeTo(null);
-
         JPanel content = new JPanel(new BorderLayout(12, 12));
         content.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         setContentPane(content);
 
-        // Top: formulario rápido de alta
+        // ----- Panel superior: solo alta + botón filtrar -----
         JPanel top = new JPanel(new GridBagLayout());
         content.add(top, BorderLayout.NORTH);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        // Alta de gasto
         gbc.gridx = 0; gbc.gridy = 0;
         top.add(new JLabel("Cantidad (€):"), gbc);
         gbc.gridx = 1; gbc.gridy = 0;
@@ -67,8 +74,8 @@ public class MainWindow extends JFrame {
         gbc.gridx = 0; gbc.gridy = 1;
         top.add(new JLabel("Categoría:"), gbc);
         gbc.gridx = 1; gbc.gridy = 1;
-        comboCategorias = new JComboBox<>(ctrl.listarCategorias().toArray(new Categoria[0]));
-        top.add(comboCategorias, gbc);
+        comboAltaCategoria = new JComboBox<>(ctrl.listarCategorias().toArray(new Categoria[0]));
+        top.add(comboAltaCategoria, gbc);
 
         gbc.gridx = 2; gbc.gridy = 1;
         top.add(new JLabel("Nota:"), gbc);
@@ -79,16 +86,99 @@ public class MainWindow extends JFrame {
         gbc.gridx = 4; gbc.gridy = 0; gbc.gridheight = 2;
         btnAgregar = new JButton("Añadir gasto");
         top.add(btnAgregar, gbc);
-
         btnAgregar.addActionListener(e -> onAgregar());
 
-        // Center: tabla
+        // Botón Filtrar…
+        gbc.gridheight = 1;
+        gbc.gridx = 5; gbc.gridy = 0;
+        btnFiltrar = new JButton("Filtrar…");
+        top.add(btnFiltrar, gbc);
+        btnFiltrar.addActionListener(e -> abrirDialogoFiltros());
+
+        // ----- Tabla central -----
         model = new GastosTableModel();
         tabla = new JTable(model);
         tabla.setFillsViewportHeight(true);
         content.add(new JScrollPane(tabla), BorderLayout.CENTER);
+
+        // ----- Panel inferior -----
+        JPanel bottom = new JPanel(new BorderLayout());
+        lblError = new JLabel(" ");
+        lblError.setForeground(Color.RED);
+        lblError.setBorder(BorderFactory.createEmptyBorder(4, 10, 4, 10));
+        bottom.add(lblError, BorderLayout.WEST);
+
+        lblTotal = new JLabel("Total: 0.00 €", SwingConstants.RIGHT);
+        lblTotal.setFont(lblTotal.getFont().deriveFont(Font.BOLD, 14f));
+        bottom.add(lblTotal, BorderLayout.EAST);
+
+        content.add(bottom, BorderLayout.SOUTH);
     }
-    
+
+    private void cargarTabla() {
+        List<Gasto> gastos = ctrl.listarGastos();
+        model.setData(gastos, ctrl.listarCategorias());
+        actualizarTotal(gastos);
+        lblError.setText(" ");
+    }
+
+    private void onAgregar() {
+        lblError.setText(" ");
+        try {
+            BigDecimal cantidad = new BigDecimal(txtCantidad.getText().trim());
+            if (cantidad.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("La cantidad debe ser mayor que 0");
+            }
+
+            LocalDate fecha = LocalDate.parse(txtFecha.getText().trim());
+            if (fecha.isAfter(LocalDate.now())) {
+                lblError.setText("⚠ La fecha está en el futuro (se permite).");
+            }
+
+            Categoria cat = (Categoria) comboAltaCategoria.getSelectedItem();
+            if (cat == null) {
+                throw new IllegalArgumentException("Selecciona una categoría.");
+            }
+
+            String nota = txtNota.getText().trim();
+            ctrl.registrarGasto(cantidad, fecha, cat.getId(), nota);
+
+            // limpiar
+            txtCantidad.setText("");
+            txtNota.setText("");
+            txtCantidad.requestFocus();
+
+            cargarTabla();
+        } catch (Exception ex) {
+            lblError.setText("❌ " + ex.getMessage());
+        }
+    }
+
+    private void abrirDialogoFiltros() {
+        FiltroGastosDialog dlg = new FiltroGastosDialog(this);
+        dlg.setVisible(true);
+
+        if (dlg.isOk()) {
+            CriteriosFiltroGastos c = dlg.getCriterios();
+
+            List<Gasto> filtrados = ctrl.filtrarGastos(
+                    c.getDesde(),
+                    c.getHasta(),
+                    c.getCategoriaId()
+            );
+
+            model.setData(filtrados, ctrl.listarCategorias());
+            actualizarTotal(filtrados);
+        }
+    }
+
+    private void actualizarTotal(final List<Gasto> gastos) {
+        BigDecimal total = gastos.stream()
+                .map(Gasto::getCantidad)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        lblTotal.setText(String.format("Total: %.2f €", total));
+    }
+
     private void crearMenu() {
         JMenuBar bar = new JMenuBar();
         JMenu datos = new JMenu("Datos");
@@ -100,54 +190,23 @@ public class MainWindow extends JFrame {
         miCategorias.addActionListener(e -> {
             CategoriasDialog dlg = new CategoriasDialog(this);
             dlg.setVisible(true);
-            recargarCategoriasEnCombo();
+            recargarCategorias();
             cargarTabla();
         });
     }
 
-
-    private void recargarCategoriasEnCombo() {
-        comboCategorias.removeAllItems();
+    private void recargarCategorias() {
+        comboAltaCategoria.removeAllItems();
         for (Categoria c : ctrl.listarCategorias()) {
-            comboCategorias.addItem(c);
+            comboAltaCategoria.addItem(c);
         }
     }
 
-
-    private void cargarTabla() {
-        model.setData(ctrl.listarGastos(), ctrl.listarCategorias());
-    }
-
-    private void onAgregar() {
-        try {
-            BigDecimal cantidad = new BigDecimal(txtCantidad.getText().trim());
-            LocalDate fecha = LocalDate.parse(txtFecha.getText().trim());
-            Categoria cat = (Categoria) comboCategorias.getSelectedItem();
-            String nota = txtNota.getText().trim();
-
-            if (cat == null) {
-                JOptionPane.showMessageDialog(this, "Selecciona una categoría.",
-                        "Validación", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            ctrl.registrarGasto(cantidad, fecha, cat.getId(), nota);
-            cargarTabla();
-            txtCantidad.setText("");
-            txtNota.setText("");
-            txtCantidad.requestFocus();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Datos no válidos: " + ex.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    // ===== TableModel =====
+    // ===== TABLE MODEL =====
     private static class GastosTableModel extends AbstractTableModel {
 
         private List<Gasto> gastos;
         private List<Categoria> categorias;
-
         private final String[] cols = new String[] { "Fecha", "Categoría", "Cantidad", "Nota" };
 
         public void setData(final List<Gasto> gastos, final List<Categoria> categorias) {

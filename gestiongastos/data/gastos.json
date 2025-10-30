@@ -6,4 +6,28 @@
   "nota" : "pan",
   "cuentaCompartidaId" : null,
   "personaId" : null
+}, {
+  "id" : "0050aa9c-7bf9-4910-8ee9-d960574c21cf",
+  "cantidad" : 8,
+  "fecha" : [ 2025, 10, 29 ],
+  "categoriaId" : "ff44d1f1-e54f-4f05-8e80-501ef880c085",
+  "nota" : "culo",
+  "cuentaCompartidaId" : null,
+  "personaId" : null
+}, {
+  "id" : "aeb775b2-dcd2-40a6-83e4-82c6039b6e9d",
+  "cantidad" : 90,
+  "fecha" : [ 2025, 10, 30 ],
+  "categoriaId" : "14294c54-3ee2-4ae3-b935-3a88faefb8ca",
+  "nota" : "compra Mercadona",
+  "cuentaCompartidaId" : null,
+  "personaId" : null
+}, {
+  "id" : "db3d2ce0-df86-4d3a-9de2-21b6f70084be",
+  "cantidad" : 8,
+  "fecha" : [ 2025, 10, 30 ],
+  "categoriaId" : "ff44d1f1-e54f-4f05-8e80-501ef880c085",
+  "nota" : "bolsa",
+  "cuentaCompartidaId" : null,
+  "personaId" : null
 } ]

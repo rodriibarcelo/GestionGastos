@@ -74,7 +74,7 @@ public class Controlador {
         }));
     }
 
-    // ===== API Login (stub para tu LoginWindow) =====
+    // ===== API Login  =====
     public boolean loginUsuario(final String usuario, final String password) {
         return "admin".equalsIgnoreCase(usuario) && "admin".equals(password);
     }
@@ -109,6 +109,35 @@ public class Controlador {
     public void actualizarCategoria(final java.util.UUID id, final String nuevoNombre, final String nuevoColorHex) {
         servicioCategorias.actualizar(id, nuevoNombre, nuevoColorHex);
     }
+    
+    
+ // ===== FILTROS Y TOTALES =====
+
+    public List<Gasto> filtrarGastos(
+            final java.time.LocalDate desde,
+            final java.time.LocalDate hasta,
+            final java.util.UUID categoriaId
+    ) {
+        return repoGasto.findAll()
+                .stream()
+                .filter(g -> desde == null || !g.getFecha().isBefore(desde))
+                .filter(g -> hasta == null || !g.getFecha().isAfter(hasta))
+                .filter(g -> categoriaId == null || categoriaId.equals(g.getCategoriaId()))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    public java.math.BigDecimal calcularTotal(
+            final java.time.LocalDate desde,
+            final java.time.LocalDate hasta,
+            final java.util.UUID categoriaId
+    ) {
+        return filtrarGastos(desde, hasta, categoriaId)
+                .stream()
+                .map(g -> g.getCantidad())
+                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+    }
+
+    
 
     
     
