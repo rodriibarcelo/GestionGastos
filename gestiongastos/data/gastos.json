@@ -30,4 +30,12 @@
   "nota" : "bolsa",
   "cuentaCompartidaId" : null,
   "personaId" : null
+}, {
+  "id" : "8dd960f3-c7cc-4fa6-8665-23aeec78a86c",
+  "cantidad" : 9,
+  "fecha" : [ 2025, 11, 10 ],
+  "categoriaId" : "ff44d1f1-e54f-4f05-8e80-501ef880c085",
+  "nota" : "lego",
+  "cuentaCompartidaId" : null,
+  "personaId" : null
 } ]

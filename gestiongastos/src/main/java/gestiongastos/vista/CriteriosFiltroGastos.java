@@ -9,9 +9,6 @@ public class CriteriosFiltroGastos {
     private LocalDate hasta;
     private UUID categoriaId;
 
-    public CriteriosFiltroGastos() {
-    }
-
     public LocalDate getDesde() {
         return desde;
     }
