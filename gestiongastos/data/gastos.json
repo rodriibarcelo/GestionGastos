@@ -24,18 +24,10 @@
   "personaId" : null
 }, {
   "id" : "db3d2ce0-df86-4d3a-9de2-21b6f70084be",
-  "cantidad" : 8,
+  "cantidad" : 8.00,
   "fecha" : [ 2025, 10, 30 ],
   "categoriaId" : "ff44d1f1-e54f-4f05-8e80-501ef880c085",
   "nota" : "bolsa",
-  "cuentaCompartidaId" : null,
-  "personaId" : null
-}, {
-  "id" : "8dd960f3-c7cc-4fa6-8665-23aeec78a86c",
-  "cantidad" : 9,
-  "fecha" : [ 2025, 11, 10 ],
-  "categoriaId" : "ff44d1f1-e54f-4f05-8e80-501ef880c085",
-  "nota" : "lego",
   "cuentaCompartidaId" : null,
   "personaId" : null
 } ]

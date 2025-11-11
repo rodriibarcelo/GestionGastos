@@ -137,6 +137,59 @@ public class Controlador {
                 .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
     }
 
+ // ===== ACTUALIZAR / BORRAR GASTO =====
+    public void actualizarGasto(UUID id,
+                                BigDecimal nuevaCantidad,
+                                LocalDate nuevaFecha,
+                                UUID nuevaCategoriaId,
+                                String nuevaNota) {
+        if (id == null) throw new IllegalArgumentException("Id nulo.");
+        if (nuevaCantidad == null || nuevaCantidad.signum() <= 0)
+            throw new IllegalArgumentException("La cantidad debe ser > 0.");
+        if (nuevaFecha == null) throw new IllegalArgumentException("Fecha obligatoria.");
+        if (nuevaCategoriaId == null) throw new IllegalArgumentException("Categoría obligatoria.");
+
+        // (Opcional) valida que la categoría exista
+        boolean catExiste = repoCategoria.findAll().stream()
+                .anyMatch(c -> c.getId().equals(nuevaCategoriaId));
+        if (!catExiste) {
+            throw new IllegalArgumentException("La categoría no existe.");
+        }
+
+        // Busca el gasto
+        Gasto g = repoGasto.findAll().stream()
+                .filter(x -> x.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("El gasto no existe."));
+
+        // Actualiza campos
+        g.setCantidad(nuevaCantidad);
+        g.setFecha(nuevaFecha);
+        g.setCategoriaId(nuevaCategoriaId);
+        g.setNota(nuevaNota == null ? "" : nuevaNota.trim());
+
+        // Persiste (en InMemoryRepository suele ser idempotente)
+        repoGasto.save(g);
+    }
+
+    public void borrarGasto(UUID id) {
+        if (id == null) throw new IllegalArgumentException("Id nulo.");
+
+        boolean existe = repoGasto.findAll().stream()
+                .anyMatch(g -> g.getId().equals(id));
+        if (!existe) {
+            throw new IllegalArgumentException("El gasto no existe.");
+        }
+
+        // Si tu Repository expone delete(id), úsalo:
+        repoGasto.deleteById(id);
+
+        // Si no tuviera delete(id), alternativa:
+        // List<Gasto> todos = new ArrayList<>(repoGasto.findAll());
+        // todos.removeIf(g -> g.getId().equals(id));
+        // persistencia.guardarGastos(todos); // solo si quisieras forzar guardado inmediato
+    }
+
     
 
     
