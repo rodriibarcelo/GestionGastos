@@ -30,4 +30,20 @@
   "nota" : "bolsa",
   "cuentaCompartidaId" : null,
   "personaId" : null
+}, {
+  "id" : "b2c496a3-2dda-4417-b716-163301755120",
+  "cantidad" : 10,
+  "fecha" : [ 2025, 11, 11 ],
+  "categoriaId" : "50986d21-04a1-4107-b5ed-d59d7d8a802a",
+  "nota" : "mi raza",
+  "cuentaCompartidaId" : null,
+  "personaId" : null
+}, {
+  "id" : "9a97e159-56dc-406a-a11a-f66bd5abfc1a",
+  "cantidad" : 30,
+  "fecha" : [ 2025, 11, 11 ],
+  "categoriaId" : "338320fa-5eee-4faa-b99b-761c51c11998",
+  "nota" : "gym",
+  "cuentaCompartidaId" : null,
+  "personaId" : null
 } ]

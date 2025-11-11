@@ -19,7 +19,6 @@ import javafx.scene.layout.BorderPane;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -72,7 +71,6 @@ public class VistaEstadisticas {
         return pane;
     }
 
-
     private ObservableList<RowResumen> datosResumen() {
         List<Gasto> gastos = ctrl.listarGastos();
         Map<UUID, String> catNames = ctrl.listarCategorias().stream()
@@ -115,6 +113,16 @@ public class VistaEstadisticas {
 
         PieChart chart = new PieChart(data);
         chart.setTitle("Distribución por categoría");
+
+        // -> aplicar color por categoría (según Categoria.getColorHex)
+        Map<String, String> colorByName = coloresPorNombre();
+        for (PieChart.Data d : chart.getData()) {
+            String hex = colorByName.getOrDefault(d.getName(), "#808080");
+            String css = "-fx-pie-color: " + hex + ";";
+            d.nodeProperty().addListener((obs, oldN, newN) -> { if (newN != null) newN.setStyle(css); });
+            if (d.getNode() != null) d.getNode().setStyle(css);
+        }
+
         return wrap(chart);
     }
 
@@ -143,6 +151,16 @@ public class VistaEstadisticas {
                 .forEach(e -> serie.getData().add(new XYChart.Data<>(e.getKey(), e.getValue())));
 
         chart.getData().add(serie);
+
+        // -> colorear cada barra según la categoría
+        Map<String, String> colorByName = coloresPorNombre();
+        for (XYChart.Data<String, Number> d : serie.getData()) {
+            String hex = colorByName.getOrDefault(d.getXValue(), "#808080");
+            String css = "-fx-bar-fill: " + hex + ";";
+            d.nodeProperty().addListener((obs, o, n) -> { if (n != null) n.setStyle(css); });
+            if (d.getNode() != null) d.getNode().setStyle(css);
+        }
+
         return wrap(chart);
     }
 
@@ -157,7 +175,6 @@ public class VistaEstadisticas {
         serie.setName("Mensual");
 
         List<Gasto> gastos = ctrl.listarGastos();
-        // Agrupa por YearMonth
         Map<YearMonth, BigDecimal> porMes = gastos.stream()
                 .collect(Collectors.groupingBy(
                         g -> YearMonth.from(g.getFecha()),
@@ -169,6 +186,31 @@ public class VistaEstadisticas {
 
         chart.getData().add(serie);
         return wrap(chart);
+    }
+
+    // ======= helpers de color =======
+    private Map<String, String> coloresPorNombre() {
+        // nombreCategoria -> hex normalizado
+        return ctrl.listarCategorias().stream()
+                .collect(Collectors.toMap(
+                        Categoria::getNombre,
+                        c -> normalizaHex(c.getColorHex()),
+                        (a, b) -> a,
+                        LinkedHashMap::new
+                ));
+    }
+
+    private static String normalizaHex(String hex) {
+        if (hex == null) return "#808080";
+        String h = hex.trim();
+        if (h.isEmpty()) return "#808080";
+        if (!h.startsWith("#")) h = "#" + h;
+        if (h.matches("#[0-9a-fA-F]{6}")) return h;
+        if (h.matches("#[0-9a-fA-F]{3}")) {
+            char r = h.charAt(1), g = h.charAt(2), b = h.charAt(3);
+            return ("#" + r + r + g + g + b + b);
+        }
+        return "#808080";
     }
 
     private static BorderPane wrap(Parent chart) {
