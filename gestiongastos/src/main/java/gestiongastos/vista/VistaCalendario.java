@@ -7,11 +7,14 @@ import com.calendarfx.model.Calendar;
 import com.calendarfx.model.CalendarSource;
 import com.calendarfx.model.Entry;
 import com.calendarfx.view.DetailedDayView;
+import com.calendarfx.view.MonthView;
 
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.time.LocalDate;
@@ -26,24 +29,72 @@ public class VistaCalendario {
 
         root = new BorderPane();
 
-        // Vista diaria de CalendarFX (Full Day)
+        /* -----------------------------
+           VISTAS DEL CALENDARIO
+        ----------------------------- */
+
         DetailedDayView dayView = new DetailedDayView();
         dayView.setShowAllDayView(true);
-        dayView.setDate(LocalDate.now());   // empezamos en hoy
+        dayView.setDate(LocalDate.now());
+        dayView.setPrefWidth(900); 
+        dayView.setPrefHeight(650);
 
-        // ---- Selector de fecha (para cambiar el día mostrado) ----
+        MonthView monthView = new MonthView();
+        monthView.setDate(LocalDate.now());
+        monthView.setPrefWidth(900);
+        monthView.setPrefHeight(650);
+
+        // Contenedor para alternar vistas
+        StackPane contenedorVistas = new StackPane(dayView, monthView);
+        monthView.setVisible(false);  // Por defecto mostramos el día
+
+        // --- Envolver en un Pane que bloquea TODA interacción ---
+        StackPane bloqueador = new StackPane(contenedorVistas);
+
+        // Este filtro absorbe absolutamente todos los eventos del ratón
+        bloqueador.addEventFilter(javafx.scene.input.MouseEvent.ANY, e -> e.consume());
+        bloqueador.addEventFilter(javafx.scene.input.DragEvent.ANY, e -> e.consume());
+
+        bloqueador.setFocusTraversable(false);
+
+        root.setCenter(bloqueador);
+
+
+        /* -----------------------------
+           TOP: Selector de fecha y vista
+        ----------------------------- */
+
         DatePicker selectorFecha = new DatePicker(LocalDate.now());
-        selectorFecha.valueProperty().addListener((obs, oldDate, newDate) -> {
-            if (newDate != null) {
-                dayView.setDate(newDate);  // cambiamos el día mostrado
+
+        ComboBox<String> selectorVista = new ComboBox<>();
+        selectorVista.getItems().addAll("Día", "Mes");
+        selectorVista.setValue("Día");
+
+        selectorVista.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal.equals("Día")) {
+                dayView.setVisible(true);
+                monthView.setVisible(false);
+            } else {
+                dayView.setVisible(false);
+                monthView.setVisible(true);
             }
         });
 
-        VBox top = new VBox(10, selectorFecha);
+        selectorFecha.valueProperty().addListener((obs, oldDate, newDate) -> {
+            if (newDate != null) {
+                dayView.setDate(newDate);
+                monthView.setDate(newDate);
+            }
+        });
+
+        VBox top = new VBox(10, selectorFecha, selectorVista);
         top.setPadding(new Insets(10));
         root.setTop(top);
 
-        // ---- Cargar entradas de gastos ----
+        /* -----------------------------
+           CALENDARIO DE GASTOS
+        ----------------------------- */
+
         Calendar calGastos = new Calendar("Gastos");
         calGastos.setStyle(Calendar.Style.STYLE2);
 
@@ -65,13 +116,11 @@ public class VistaCalendario {
             calGastos.addEntry(entry);
         }
 
-        // ---- Añadir calendario a la vista ----
         CalendarSource source = new CalendarSource("Mis Gastos");
         source.getCalendars().add(calGastos);
 
         dayView.getCalendarSources().add(source);
-
-        root.setCenter(dayView);
+        monthView.getCalendarSources().add(source);
     }
 
     public Parent getRoot() {
