@@ -47,6 +47,14 @@
       <version>5.11.0</version>
       <scope>test</scope>
     </dependency>
+    
+    <dependency>
+  		<groupId>com.calendarfx</groupId>
+  		<artifactId>view</artifactId>
+  		<version>11.10.1</version>
+	</dependency>
+
+    
   </dependencies>
 
   <build>

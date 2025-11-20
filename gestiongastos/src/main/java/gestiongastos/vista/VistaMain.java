@@ -50,9 +50,13 @@ public class VistaMain {
         MenuBar bar = new MenuBar();
         Menu menuDatos = new Menu("Datos");
         MenuItem miCategorias = new MenuItem("Categorías…");
+        Menu menuVer = new Menu("Ver");
+        MenuItem miCalendario = new MenuItem("Calendario de gastos…");
         menuDatos.getItems().addAll(miCategorias);
         bar.getMenus().add(menuDatos);
-
+        menuVer.getItems().add(miCalendario);
+        bar.getMenus().add(menuVer);
+        
         VBox header = new VBox(6, title, bar);
         header.setAlignment(Pos.CENTER_LEFT);
         root.setTop(header);
@@ -132,6 +136,10 @@ public class VistaMain {
         btnAdd.setOnAction(e -> onAdd());
         btnFiltrar.setOnAction(e -> onOpenFiltro());
         miCategorias.setOnAction(e -> onOpenCategorias());
+        miCalendario.setOnAction(e -> {
+            VistaCalendario vc = new VistaCalendario();
+            Utils.openDialog(root, "Calendario de Gastos", vc.getRoot(), 900, 700);
+        });
     }
 
     public Parent getRoot() {

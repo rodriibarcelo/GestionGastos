@@ -38,4 +38,20 @@
   "nota" : "lego",
   "cuentaCompartidaId" : null,
   "personaId" : null
+}, {
+  "id" : "bd0e8d55-3c86-48b6-8474-bbd92021eb8c",
+  "cantidad" : 2,
+  "fecha" : [ 2025, 11, 20 ],
+  "categoriaId" : "ff44d1f1-e54f-4f05-8e80-501ef880c085",
+  "nota" : "guau",
+  "cuentaCompartidaId" : null,
+  "personaId" : null
+}, {
+  "id" : "5d35864e-831c-46db-b14b-172954600a07",
+  "cantidad" : 785,
+  "fecha" : [ 2025, 11, 14 ],
+  "categoriaId" : "50986d21-04a1-4107-b5ed-d59d7d8a802a",
+  "nota" : "play 5",
+  "cuentaCompartidaId" : null,
+  "personaId" : null
 } ]
