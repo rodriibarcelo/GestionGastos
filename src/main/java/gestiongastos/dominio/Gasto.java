@@ -7,12 +7,15 @@ import java.util.UUID;
 
 public class Gasto {
     private UUID id;
-    private BigDecimal cantidad;     // > 0
-    private LocalDate fecha;         // jsr310
-    private UUID categoriaId;        // referencia
-    private String nota;             // opcional
-    private UUID cuentaCompartidaId; // opcional
-    private UUID personaId;          // opcional (quién lo pagó)
+    private BigDecimal cantidad;     
+    private LocalDate fecha;         
+    private UUID categoriaId;        
+    private String nota;             
+    private UUID cuentaCompartidaId; 
+    private UUID personaId;          
+    
+    private transient String categoriaNombreTemp;
+    //usamos transient para no afectar a JSON
 
     public Gasto() {
     	
@@ -83,6 +86,15 @@ public class Gasto {
     public void setPersonaId(UUID personaId) { 
     	this.personaId = personaId; 
     	}
+    
+    public void setCategoriaNombreTemp(String s) {
+        this.categoriaNombreTemp = s;
+    }
+    
+    public String getCategoriaNombreTemp() {
+        return categoriaNombreTemp;
+    }
+    
 
     @Override public boolean equals(Object o) {
         if (this == o) return true;

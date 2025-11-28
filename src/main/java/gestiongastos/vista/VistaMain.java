@@ -70,6 +70,13 @@ public class VistaMain {
         Menu menuDatos = new Menu("Datos");
         MenuItem miCategorias = new MenuItem("Categorías…");
         menuDatos.getItems().add(miCategorias);
+        MenuItem miImportar = new MenuItem("Importar gastos...");
+        menuDatos.getItems().add(miImportar); 
+        miImportar.setOnAction(e -> {
+            VistaImportarGastos v = new VistaImportarGastos();
+            Utils.openDialog(root, "Importar gastos", v.getRoot(), 500, 300);
+        });
+        
 
         // Menú Ver
         Menu menuVer = new Menu("Ver");
