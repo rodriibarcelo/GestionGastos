@@ -1,0 +1,9 @@
+[ {
+  "id" : "a57b8b21-2dcb-4d8f-afd5-8e4007775893",
+  "nombreUsuario" : "admin",
+  "password" : "admin"
+}, {
+  "id" : "c6aad9ce-4b72-4c74-b333-c4075898440d",
+  "nombreUsuario" : "1",
+  "password" : "1"
+} ]

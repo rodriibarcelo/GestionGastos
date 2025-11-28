@@ -7,6 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import gestiongastos.controlador.Controlador;
+
 
 public class VistaRegistro {
 
@@ -88,11 +90,11 @@ public class VistaRegistro {
         btnCancelar.setOnAction(e -> root.getScene().getWindow().hide());
         btnAceptar.setOnAction(e -> {
             if (tfNombre.getText().trim().isEmpty()
-             || tfApellidos.getText().trim().isEmpty()
-             || tfTelefono.getText().trim().isEmpty()
-             || tfEmail.getText().trim().isEmpty()
-             || pf1.getText().isEmpty()
-             || pf2.getText().isEmpty()) {
+                    || tfApellidos.getText().trim().isEmpty()
+                    || tfTelefono.getText().trim().isEmpty()
+                    || tfEmail.getText().trim().isEmpty()
+                    || pf1.getText().isEmpty()
+                    || pf2.getText().isEmpty()) {
                 Utils.alertWarn("Completa todos los campos.");
                 return;
             }
@@ -105,7 +107,20 @@ public class VistaRegistro {
                 Utils.alertWarn("Email no válido.");
                 return;
             }
-            Utils.alertInfo("Registro (simulado) correcto.");
+
+            String username = tfNombre.getText().trim(); 
+            String password = pf1.getText();
+
+            Controlador ctrl = Controlador.getInstance();
+            boolean ok = ctrl.registrarUsuario(username, password);
+
+
+            if (!ok) {
+                Utils.alertError("Este usuario ya existe.");
+                return;
+            }
+
+            Utils.alertInfo("Usuario registrado correctamente.");
             root.getScene().getWindow().hide();
         });
     }

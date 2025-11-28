@@ -1,0 +1,17 @@
+[ {
+  "id" : "fb2498ee-8647-4bb2-86dd-183a00c4d874",
+  "cantidad" : 8,
+  "fecha" : [ 2025, 11, 28 ],
+  "categoriaId" : "ca6d6cea-2241-4925-ab4c-6fb4dcba459f",
+  "nota" : "naranjas",
+  "cuentaCompartidaId" : null,
+  "personaId" : null
+}, {
+  "id" : "3901c5c6-e6a6-413d-82ca-cc13e16b4a7c",
+  "cantidad" : 3,
+  "fecha" : [ 2025, 11, 27 ],
+  "categoriaId" : "4f17b2ea-61f7-4974-9377-608b6947c274",
+  "nota" : "lego",
+  "cuentaCompartidaId" : null,
+  "personaId" : null
+} ]
