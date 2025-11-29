@@ -1,5 +1,7 @@
 package gestiongastos.controlador;
 
+import gestiongastos.alertas.AlertaStrategy;
+import gestiongastos.alertas.GestorAlertas;
 import gestiongastos.dominio.Categoria;
 import gestiongastos.dominio.Gasto;
 import gestiongastos.dominio.Usuario;
@@ -18,15 +20,16 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-
 public class Controlador {
 
     private static final Controlador INSTANCE = new Controlador();
 
-    // Repositorios JSON (persistentes)
     private final GastoRepository repoGastos = GastoRepositoryJson.getInstance();
     private final CategoriaRepository repoCategorias = CategoriaRepositoryJson.getInstance();
     private final UsuarioRepository repoUsuarios = UsuarioRepositoryJson.getInstance();
+
+    private final GestorAlertas gestorAlertas = new GestorAlertas();
+
 
     private Controlador() {
         cargarDatosIniciales();
@@ -41,21 +44,20 @@ public class Controlador {
     // ============================================================
 
     private void cargarDatosIniciales() {
-        // Categorías por defecto si no hay ninguna
+
         if (repoCategorias.findAll().isEmpty()) {
             crearCategoria("Alimentación", "#5FBF88");
             crearCategoria("Transporte", "#4C8BF5");
             crearCategoria("Ocio", "#F5A24C");
         }
 
-        // Usuario por defecto ADMIN si no existe
         if (repoUsuarios.findByNombreUsuario("admin").isEmpty()) {
             registrarUsuario("admin", "admin");
         }
     }
 
     // ============================================================
-    // USUARIOS (registro + login)
+    // USUARIOS
     // ============================================================
 
     public boolean registrarUsuario(String username, String password) {
@@ -113,20 +115,19 @@ public class Controlador {
     // GASTOS
     // ============================================================
 
-    public Gasto registrarGasto(BigDecimal cantidad,
-                               LocalDate fecha,
-                               UUID categoriaId,
-                               String nota) {
+    public List<String> registrarGasto(BigDecimal cantidad, LocalDate fecha, UUID categoriaId, String nota) {
 
-        Gasto g = new Gasto();
-        g.setId(UUID.randomUUID());
-        g.setCantidad(cantidad);
-        g.setFecha(fecha);
-        g.setCategoriaId(categoriaId);
-        g.setNota(nota == null ? "" : nota.trim());
+        // 1. Crear gasto
+        Gasto g = new Gasto(cantidad, fecha, categoriaId, nota);
 
+        // 2. Guardar
         repoGastos.save(g);
-        return g;
+
+        // 3. Histórico
+        List<Gasto> historico = repoGastos.findAll();
+
+        // 4. Alertas
+        return gestorAlertas.evaluar(g, historico);
     }
 
     public List<Gasto> listarGastos() {
@@ -153,7 +154,7 @@ public class Controlador {
     }
 
     // ============================================================
-    // FILTRO Y TOTALES
+    // FILTROS
     // ============================================================
 
     public List<Gasto> filtrarGastos(LocalDate desde,
@@ -175,5 +176,13 @@ public class Controlador {
                 .stream()
                 .map(Gasto::getCantidad)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    // ============================================================
+    // ALERTAS
+    // ============================================================
+
+    public void configurarAlertas(List<AlertaStrategy> estrategias) {
+        gestorAlertas.setEstrategias(estrategias);
     }
 }

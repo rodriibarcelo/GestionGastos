@@ -69,13 +69,24 @@ public class VistaMain {
         // Menú Datos
         Menu menuDatos = new Menu("Datos");
         MenuItem miCategorias = new MenuItem("Categorías…");
+        
         menuDatos.getItems().add(miCategorias);
         MenuItem miImportar = new MenuItem("Importar gastos...");
+        
         menuDatos.getItems().add(miImportar); 
         miImportar.setOnAction(e -> {
             VistaImportarGastos v = new VistaImportarGastos();
             Utils.openDialog(root, "Importar gastos", v.getRoot(), 500, 300);
         });
+        
+        MenuItem miAlertas = new MenuItem("Configurar alertas...");
+        menuDatos.getItems().add(miAlertas);
+
+        miAlertas.setOnAction(e -> {
+            VistaAlertas v = new VistaAlertas();
+            Utils.openDialog(root, "Alertas", v.getRoot(), 420, 300);
+        });
+
         
 
         // Menú Ver
@@ -274,28 +285,33 @@ public class VistaMain {
             }
 
             LocalDate fecha = dpFecha.getValue();
-            if (fecha == null) {
-                throw new IllegalArgumentException("Selecciona una fecha.");
-            }
+            if (fecha == null) throw new IllegalArgumentException("Selecciona una fecha.");
 
             Categoria cat = cbCategoria.getValue();
-            if (cat == null) {
-                throw new IllegalArgumentException("Selecciona una categoría.");
-            }
+            if (cat == null) throw new IllegalArgumentException("Selecciona una categoría.");
 
             String nota = tfNota.getText().trim();
 
-            ctrl.registrarGasto(cantidad, fecha, cat.getId(), nota);
+            var mensajes = ctrl.registrarGasto(
+                    cantidad, fecha, cat.getId(), nota
+            );
 
+            cargarTabla(ctrl.listarGastos());
+
+            if (!mensajes.isEmpty()) {
+                Utils.alertWarn(String.join("\n", mensajes));
+            }
+
+            // Limpiar campos
             tfCantidad.clear();
             tfNota.clear();
             tfCantidad.requestFocus();
 
-            cargarTabla(ctrl.listarGastos());
         } catch (Exception ex) {
             lblError.setText("❌ " + ex.getMessage());
         }
     }
+
 
     private void onEdit() {
         GastoRow sel = table.getSelectionModel().getSelectedItem();
