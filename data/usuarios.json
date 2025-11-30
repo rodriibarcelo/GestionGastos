@@ -1,9 +1,13 @@
 [ {
-  "id" : "a57b8b21-2dcb-4d8f-afd5-8e4007775893",
+  "id" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
   "nombreUsuario" : "admin",
   "password" : "admin"
 }, {
-  "id" : "c6aad9ce-4b72-4c74-b333-c4075898440d",
+  "id" : "8658ea32-6e4f-4769-916c-93dfffcfe5a7",
   "nombreUsuario" : "1",
   "password" : "1"
+}, {
+  "id" : "69a3b403-7d8b-4baa-9a3a-a0a517d54d37",
+  "nombreUsuario" : "2",
+  "password" : "2"
 } ]

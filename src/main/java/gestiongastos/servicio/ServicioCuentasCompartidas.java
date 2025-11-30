@@ -2,6 +2,7 @@ package gestiongastos.servicio;
 
 import gestiongastos.dominio.CuentaCompartida;
 import gestiongastos.dominio.Participacion;
+import gestiongastos.persistencia.CuentaCompartidaRepository;
 import gestiongastos.persistencia.CuentaCompartidaRepositoryJson;
 
 import java.util.List;
@@ -9,33 +10,35 @@ import java.util.UUID;
 
 public class ServicioCuentasCompartidas {
 
-    private final CuentaCompartidaRepositoryJson repo;
+    private final CuentaCompartidaRepository repo;
 
     public ServicioCuentasCompartidas() {
         this.repo = CuentaCompartidaRepositoryJson.getInstance();
     }
 
-    public CuentaCompartida crear(String nombre, List<Participacion> participantes) {
-
-        if (nombre == null || nombre.isBlank())
-            throw new IllegalArgumentException("El nombre no puede estar vacío.");
-
-        if (participantes == null || participantes.isEmpty())
-            throw new IllegalArgumentException("Debe haber al menos un participante.");
-
-        CuentaCompartida c = new CuentaCompartida(nombre);
-        participantes.forEach(c::addParticipante);
-
-        repo.save(c);
-        return c;
-    }
-
+    // ===== LISTAR =====
     public List<CuentaCompartida> listar() {
         return repo.findAll();
     }
 
-    public void actualizar(CuentaCompartida c) {
-        repo.update(c);
+    // ===== CREAR =====
+    public CuentaCompartida crear(String nombre, List<Participacion> participantes) {
+        CuentaCompartida c = new CuentaCompartida();
+        c.setId(UUID.randomUUID());
+        c.setNombre(nombre);
+        c.setParticipantes(participantes); // <-- AQUÍ ESTÁ LA CLAVE
+        repo.save(c);
+        return c;
+    }
+
+    // ===== ACTUALIZAR =====
+    public void actualizar(CuentaCompartida cuenta) {
+        repo.update(cuenta);
+    }
+
+    // ===== BORRAR =====
+    public void borrar(UUID id) {
+        repo.deleteById(id);
     }
 
     public CuentaCompartida buscarPorId(UUID id) {

@@ -1,73 +1,13 @@
 [ {
-  "id" : "ca6d6cea-2241-4925-ab4c-6fb4dcba459f",
+  "id" : "00ae7e04-a04d-418b-9d90-5631becbf67d",
   "nombre" : "Alimentación",
   "colorHex" : "#5FBF88"
 }, {
-  "id" : "627b4d0d-03f1-47b3-8aec-f2cb71e483e5",
+  "id" : "eb062dbe-7c89-4ecf-b315-0604d8e526a0",
   "nombre" : "Transporte",
   "colorHex" : "#4C8BF5"
 }, {
-  "id" : "4f17b2ea-61f7-4974-9377-608b6947c274",
+  "id" : "6316a956-5fa7-4ed4-b9f0-b37bd6dd277f",
   "nombre" : "Ocio",
   "colorHex" : "#F5A24C"
-}, {
-  "id" : "e55a61c4-9a47-4558-a3fc-c8a6cca13564",
-  "nombre" : "con tarjeta / Comida",
-  "colorHex" : "#888888"
-}, {
-  "id" : "870ee7b4-d7cb-4321-9e2f-d83fde54a209",
-  "nombre" : "efectivo / Transporte Público",
-  "colorHex" : "#888888"
-}, {
-  "id" : "7d5b7a15-ec71-4c7c-995c-f0d31a4e935e",
-  "nombre" : "on line / Ocio",
-  "colorHex" : "#888888"
-}, {
-  "id" : "88aadef7-e7b0-4937-ba7b-78d8dc052e37",
-  "nombre" : "con tarjeta / Gasolina",
-  "colorHex" : "#888888"
-}, {
-  "id" : "f2f53484-f165-4177-ac85-8e051c6ac86d",
-  "nombre" : "efectivo / Ocio",
-  "colorHex" : "#888888"
-}, {
-  "id" : "f61bf536-bf29-4f01-b24e-6c3b6e06a6f3",
-  "nombre" : "on line / Regalos",
-  "colorHex" : "#888888"
-}, {
-  "id" : "6afcb89c-246e-4973-be79-72fc3ec57ca5",
-  "nombre" : "con paypal / Ocio",
-  "colorHex" : "#888888"
-}, {
-  "id" : "987a6c62-198e-4093-b712-fcdd5fcebc76",
-  "nombre" : "efectivo / Gasolina",
-  "colorHex" : "#888888"
-}, {
-  "id" : "8511abe9-39ab-4edc-867d-c62275304482",
-  "nombre" : "con tarjeta / Reparaciones",
-  "colorHex" : "#888888"
-}, {
-  "id" : "081ee3f1-ffc0-40ee-8828-656f167f1d4a",
-  "nombre" : "on line / Transporte Público",
-  "colorHex" : "#888888"
-}, {
-  "id" : "c1e51286-55cc-4c6a-98e3-f6702e6f0aa2",
-  "nombre" : "efectivo / Comida",
-  "colorHex" : "#888888"
-}, {
-  "id" : "c28009fc-f659-4b26-a345-f70f33e74f29",
-  "nombre" : "con tarjeta / Ocio",
-  "colorHex" : "#888888"
-}, {
-  "id" : "22e30f84-0de0-4854-84a5-051798ede6d9",
-  "nombre" : "on line / Gastos Médicos",
-  "colorHex" : "#888888"
-}, {
-  "id" : "20b18629-5a5c-4a39-92bb-13691b0a9437",
-  "nombre" : "con tarjeta / Regalos",
-  "colorHex" : "#888888"
-}, {
-  "id" : "49626d46-14b7-43a2-a872-f809fd1e8bc8",
-  "nombre" : "on line / Comida",
-  "colorHex" : "#888888"
 } ]

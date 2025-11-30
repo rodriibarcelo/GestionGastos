@@ -45,4 +45,10 @@ public class CuentaCompartida {
     public void addParticipante(Participacion p) {
         this.participantes.add(p);
     }
+    
+    @Override
+    public String toString() {
+        return nombre != null ? nombre : "(sin nombre)";
+    }
+
 }

@@ -25,10 +25,9 @@ public class Controlador {
 
     private static final Controlador INSTANCE = new Controlador();
 
-    // SOLO este repo se queda aquí (no hay ServicioUsuarios)
+    // (no hay ServicioUsuarios)
     private final UsuarioRepository repoUsuarios = UsuarioRepositoryJson.getInstance();
 
-    // Servicios (la lógica real está aquí)
     private final ServicioGastos servicioGastos =
             new ServicioGastos(GastoRepositoryJson.getInstance());
 
@@ -37,6 +36,9 @@ public class Controlador {
 
     private final ServicioCuentasCompartidas servicioCuentas =
             new ServicioCuentasCompartidas();
+    
+    private Usuario usuarioActual;
+
 
     private final GestorAlertas gestorAlertas = new GestorAlertas();
 
@@ -91,8 +93,20 @@ public class Controlador {
 
     public boolean loginUsuario(String username, String password) {
         Optional<Usuario> u = repoUsuarios.findByNombreUsuario(username);
-        return u.isPresent() && u.get().getPassword().equals(password);
+        boolean ok = u.isPresent() && u.get().getPassword().equals(password);
+        if (ok) usuarioActual = u.get();
+        return ok;
     }
+
+    
+    public List<Usuario> listarUsuarios() {
+        return repoUsuarios.findAll();
+    }
+    
+    public Usuario getUsuarioActual() {
+        return usuarioActual;
+    }
+
 
     // ============================================================
     // CATEGORÍAS
@@ -121,6 +135,7 @@ public class Controlador {
     public List<String> registrarGasto(BigDecimal cantidad, LocalDate fecha, UUID categoriaId, String nota) {
 
         Gasto g = new Gasto(cantidad, fecha, categoriaId, nota);
+        g.setUsuarioId(usuarioActual.getId());
         servicioGastos.registrar(g);
 
         return gestorAlertas.evaluar(g, servicioGastos.listar());
@@ -137,8 +152,11 @@ public class Controlador {
     }
 
     public List<Gasto> listarGastos() {
-        return servicioGastos.listar();
+        return servicioGastos.listar().stream()
+                .filter(g -> g.getUsuarioId().equals(usuarioActual.getId()))
+                .toList();
     }
+
 
     public void actualizarGasto(UUID id, BigDecimal nuevaCantidad, LocalDate nuevaFecha, UUID nuevaCategoriaId, String nuevaNota) {
         servicioGastos.actualizar(id, nuevaCantidad, nuevaFecha, nuevaCategoriaId, nuevaNota);
@@ -153,8 +171,11 @@ public class Controlador {
     // ============================================================
 
     public List<Gasto> filtrarGastos(LocalDate d1, LocalDate d2, UUID catId) {
-        return servicioGastos.filtrar(d1, d2, catId);
+        return servicioGastos.filtrar(d1, d2, catId).stream()
+                .filter(g -> g.getUsuarioId().equals(usuarioActual.getId()))
+                .toList();
     }
+
 
     public BigDecimal calcularTotal(LocalDate desde, LocalDate hasta, UUID categoriaId) {
         return servicioGastos.total(desde, hasta, categoriaId);

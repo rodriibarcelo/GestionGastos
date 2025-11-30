@@ -4,9 +4,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import gestiongastos.dominio.CuentaCompartida;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-public class CuentaCompartidaRepositoryJson {
+public class CuentaCompartidaRepositoryJson implements CuentaCompartidaRepository {
 
     private static final CuentaCompartidaRepositoryJson INSTANCE = new CuentaCompartidaRepositoryJson();
 
@@ -14,7 +17,7 @@ public class CuentaCompartidaRepositoryJson {
     private final List<CuentaCompartida> datos;
 
     private CuentaCompartidaRepositoryJson() {
-        this.filePath = Path.of("data", "cuentas.json").toAbsolutePath();
+        this.filePath = Path.of("data", "cuentas_compartidas.json");
         this.datos = new ArrayList<>(
                 JsonStorage.loadList(filePath, new TypeReference<List<CuentaCompartida>>() {})
         );
@@ -24,27 +27,39 @@ public class CuentaCompartidaRepositoryJson {
         return INSTANCE;
     }
 
-    public List<CuentaCompartida> findAll() {
+    @Override
+    public synchronized List<CuentaCompartida> findAll() {
         return List.copyOf(datos);
     }
 
-    public Optional<CuentaCompartida> findById(UUID id) {
-        return datos.stream().filter(c -> c.getId().equals(id)).findFirst();
+    @Override
+    public synchronized Optional<CuentaCompartida> findById(UUID id) {
+        return datos.stream()
+                    .filter(c -> c.getId().equals(id))
+                    .findFirst();
     }
 
-    public void save(CuentaCompartida c) {
-        datos.add(c);
+    @Override
+    public synchronized void save(CuentaCompartida cuenta) {
+        datos.add(cuenta);
         flush();
     }
 
-    public void update(CuentaCompartida c) {
+    @Override
+    public synchronized void update(CuentaCompartida cuenta) {
         for (int i = 0; i < datos.size(); i++) {
-            if (datos.get(i).getId().equals(c.getId())) {
-                datos.set(i, c);
+            if (datos.get(i).getId().equals(cuenta.getId())) {
+                datos.set(i, cuenta);
                 flush();
                 return;
             }
         }
+    }
+
+    @Override
+    public synchronized void deleteById(UUID id) {
+        datos.removeIf(c -> c.getId().equals(id));
+        flush();
     }
 
     private void flush() {

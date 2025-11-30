@@ -2,6 +2,7 @@ package gestiongastos.vista;
 
 import gestiongastos.controlador.Controlador;
 import gestiongastos.dominio.Categoria;
+import gestiongastos.dominio.CuentaCompartida;
 import gestiongastos.dominio.Gasto;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -33,6 +34,7 @@ public class VistaMain {
     private final TextField tfCantidad;
     private final DatePicker dpFecha;
     private final ComboBox<Categoria> cbCategoria;
+    private final ComboBox<Object> cbCuenta;
     private final TextField tfNota;
     private final Button btnAdd;
     private final Button btnFiltrar;
@@ -63,33 +65,18 @@ public class VistaMain {
         this.root = new BorderPane();
         this.root.setPadding(new Insets(12));
 
-        // ======= Cabecera: Menús + Título =======
+        // ============================================================
+        // CABECERA
+        // ============================================================
         MenuBar bar = new MenuBar();
 
-        // Menú Datos
         Menu menuDatos = new Menu("Datos");
         MenuItem miCategorias = new MenuItem("Categorías…");
-        
-        menuDatos.getItems().add(miCategorias);
-        MenuItem miImportar = new MenuItem("Importar gastos...");
-        
-        menuDatos.getItems().add(miImportar); 
-        miImportar.setOnAction(e -> {
-            VistaImportarGastos v = new VistaImportarGastos();
-            Utils.openDialog(root, "Importar gastos", v.getRoot(), 500, 300);
-        });
-        
-        MenuItem miAlertas = new MenuItem("Configurar alertas...");
-        menuDatos.getItems().add(miAlertas);
+        MenuItem miImportar = new MenuItem("Importar gastos…");
+        MenuItem miAlertas = new MenuItem("Configurar alertas…");
 
-        miAlertas.setOnAction(e -> {
-            VistaAlertas v = new VistaAlertas();
-            Utils.openDialog(root, "Alertas", v.getRoot(), 420, 300);
-        });
+        menuDatos.getItems().addAll(miCategorias, miImportar, miAlertas);
 
-        
-
-        // Menú Ver
         Menu menuVer = new Menu("Ver");
         MenuItem miEstadisticas = new MenuItem("Estadísticas…");
         MenuItem miCalendario = new MenuItem("Calendario de gastos…");
@@ -106,7 +93,9 @@ public class VistaMain {
         VBox header = new VBox(bar, titleBox);
         root.setTop(header);
 
-        // ======= Panel superior (formulario) =======
+        // ============================================================
+        // FORMULARIO SUPERIOR
+        // ============================================================
         GridPane form = new GridPane();
         form.setHgap(10);
         form.setVgap(10);
@@ -121,7 +110,7 @@ public class VistaMain {
         c3.setHalignment(HPos.RIGHT);
         ColumnConstraints c4 = new ColumnConstraints();
         c4.setHgrow(Priority.ALWAYS);
-        ColumnConstraints c5 = new ColumnConstraints(); // acciones
+        ColumnConstraints c5 = new ColumnConstraints();
         form.getColumnConstraints().addAll(c1, c2, c3, c4, c5);
 
         tfCantidad = new TextField();
@@ -130,14 +119,14 @@ public class VistaMain {
         aplicarFormatterDecimal(tfCantidad);
 
         dpFecha = new DatePicker(LocalDate.now());
-        dpFecha.setConverter(new StringConverter<LocalDate>() {
+        dpFecha.setConverter(new StringConverter<>() {
             @Override
-            public String toString(final LocalDate d) {
+            public String toString(LocalDate d) {
                 return d == null ? "" : DF.format(d);
             }
 
             @Override
-            public LocalDate fromString(final String s) {
+            public LocalDate fromString(String s) {
                 return (s == null || s.isBlank()) ? null : LocalDate.parse(s, DF);
             }
         });
@@ -145,13 +134,16 @@ public class VistaMain {
         cbCategoria = new ComboBox<>(FXCollections.observableArrayList(ctrl.listarCategorias()));
         cbCategoria.setMaxWidth(Double.MAX_VALUE);
 
+        cbCuenta = new ComboBox<>();
+        actualizarComboCuentas();
+
         tfNota = new TextField();
         tfNota.setPromptText("Descripción opcional…");
 
-        btnAdd = new Button("Añadir");
+        btnAdd     = new Button("Añadir");
         btnFiltrar = new Button("Filtrar…");
-        btnEdit = new Button("Editar");
-        btnDelete = new Button("Eliminar");
+        btnEdit    = new Button("Editar");
+        btnDelete  = new Button("Eliminar");
 
         int r = 0;
         form.add(new Label("Cantidad (€):"), 0, r);
@@ -164,12 +156,18 @@ public class VistaMain {
         form.add(acciones, 4, r);
 
         r++;
+        form.add(new Label("Cuenta:"), 0, r);
+        form.add(cbCuenta, 1, r);
+
+        r++;
         form.add(new Label("Categoría:"), 0, r);
         form.add(cbCategoria, 1, r);
         form.add(new Label("Nota:"), 2, r);
         form.add(tfNota, 3, r);
 
-        // ======= Tabla =======
+        // ============================================================
+        // TABLA
+        // ============================================================
         table = new TableView<>();
         rows = FXCollections.observableArrayList();
         table.setItems(rows);
@@ -178,9 +176,9 @@ public class VistaMain {
         TableColumn<GastoRow, LocalDate> cFecha = new TableColumn<>("Fecha");
         cFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
         cFecha.setMinWidth(110);
-        cFecha.setCellFactory(col -> new TableCell<GastoRow, LocalDate>() {
+        cFecha.setCellFactory(col -> new TableCell<>() {
             @Override
-            protected void updateItem(final LocalDate item, final boolean empty) {
+            protected void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(empty || item == null ? null : DF.format(item));
             }
@@ -194,9 +192,9 @@ public class VistaMain {
         cCant.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
         cCant.setMinWidth(120);
         cCant.setStyle("-fx-alignment: CENTER-RIGHT;");
-        cCant.setCellFactory(col -> new TableCell<GastoRow, BigDecimal>() {
+        cCant.setCellFactory(col -> new TableCell<>() {
             @Override
-            protected void updateItem(final BigDecimal item, final boolean empty) {
+            protected void updateItem(BigDecimal item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(empty || item == null ? null : MONEY.format(item));
             }
@@ -208,29 +206,21 @@ public class VistaMain {
 
         table.getColumns().setAll(cFecha, cCat, cCant, cNota);
 
-        // Menú contextual y doble clic
-        MenuItem miEdit = new MenuItem("Editar");
-        MenuItem miDelete = new MenuItem("Eliminar");
-        miEdit.setOnAction(e -> onEdit());
-        miDelete.setOnAction(e -> onDelete());
-        ContextMenu ctx = new ContextMenu(miEdit, miDelete);
-        table.setContextMenu(ctx);
-        table.setRowFactory(tv -> {
-            TableRow<GastoRow> row2 = new TableRow<>();
-            row2.setOnMouseClicked(evt -> {
-                if (evt.getClickCount() == 2 && !row2.isEmpty()) {
-                    onEdit();
-                }
-            });
-            return row2;
-        });
+        // Menú contextual
+        MenuItem miEditCtx = new MenuItem("Editar");
+        MenuItem miDeleteCtx = new MenuItem("Eliminar");
+        miEditCtx.setOnAction(e -> onEdit());
+        miDeleteCtx.setOnAction(e -> onDelete());
+        table.setContextMenu(new ContextMenu(miEditCtx, miDeleteCtx));
 
         VBox center = new VBox(10, form, table);
         center.setPadding(new Insets(8, 8, 0, 8));
         VBox.setVgrow(table, Priority.ALWAYS);
         root.setCenter(center);
 
-        // ======= Pie =======
+        // ============================================================
+        // PIE
+        // ============================================================
         lblError = new Label(" ");
         lblError.setStyle("-fx-text-fill: red;");
 
@@ -245,28 +235,30 @@ public class VistaMain {
         bottom.setPadding(new Insets(10, 8, 10, 8));
         root.setBottom(bottom);
 
-        // ======= Datos iniciales =======
+        // ============================================================
+        // DATOS INICIALES
+        // ============================================================
         cargarTabla(ctrl.listarGastos());
 
-        // ======= Listeners =======
+        // ============================================================
+        // LISTENERS
+        // ============================================================
         btnAdd.setOnAction(e -> onAdd());
         btnFiltrar.setOnAction(e -> onOpenFiltro());
         btnEdit.setOnAction(e -> onEdit());
         btnDelete.setOnAction(e -> onDelete());
-
         miCategorias.setOnAction(e -> onOpenCategorias());
-
-        miCalendario.setOnAction(e -> {
-            VistaCalendario vc = new VistaCalendario();
-            Utils.openDialog(root, "Calendario de Gastos", vc.getRoot(), 900, 700);
-        });
 
         miEstadisticas.setOnAction(e -> {
             VistaEstadisticas est = new VistaEstadisticas();
             Utils.openDialog(root, "Estadísticas", est.getRoot(), 900, 640);
         });
 
-        // Habilitar/Deshabilitar Editar/Eliminar según selección
+        miCalendario.setOnAction(e -> {
+            VistaCalendario vc = new VistaCalendario();
+            Utils.openDialog(root, "Calendario de Gastos", vc.getRoot(), 900, 700);
+        });
+
         btnEdit.disableProperty().bind(Bindings.isNull(table.getSelectionModel().selectedItemProperty()));
         btnDelete.disableProperty().bind(Bindings.isNull(table.getSelectionModel().selectedItemProperty()));
     }
@@ -275,26 +267,52 @@ public class VistaMain {
         return root;
     }
 
-    // ================= Acciones =================
+    // ============================================================
+    // ACCIONES
+    // ============================================================
     private void onAdd() {
         lblError.setText(" ");
+
         try {
             BigDecimal cantidad = parseCantidad(tfCantidad.getText().trim());
-            if (cantidad.compareTo(BigDecimal.ZERO) <= 0) {
+            if (cantidad.compareTo(BigDecimal.ZERO) <= 0)
                 throw new IllegalArgumentException("La cantidad debe ser mayor que 0.");
-            }
 
             LocalDate fecha = dpFecha.getValue();
-            if (fecha == null) throw new IllegalArgumentException("Selecciona una fecha.");
+            if (fecha == null)
+                throw new IllegalArgumentException("Selecciona una fecha.");
 
             Categoria cat = cbCategoria.getValue();
-            if (cat == null) throw new IllegalArgumentException("Selecciona una categoría.");
+            if (cat == null)
+                throw new IllegalArgumentException("Selecciona una categoría.");
 
             String nota = tfNota.getText().trim();
 
-            var mensajes = ctrl.registrarGasto(
-                    cantidad, fecha, cat.getId(), nota
-            );
+            Object seleccionCuenta = cbCuenta.getValue();
+            List<String> mensajes;
+
+            if ("Personal".equals(seleccionCuenta)) {
+
+                mensajes = ctrl.registrarGasto(
+                        cantidad,
+                        fecha,
+                        cat.getId(),
+                        nota
+                );
+
+            } else if (seleccionCuenta instanceof CuentaCompartida cuenta) {
+
+                mensajes = ctrl.registrarGastoCompartido(
+                        cantidad,
+                        fecha,
+                        cat.getId(),
+                        cuenta.getId(),
+                        nota
+                );
+
+            } else {
+                throw new IllegalStateException("Cuenta seleccionada inválida.");
+            }
 
             cargarTabla(ctrl.listarGastos());
 
@@ -302,7 +320,6 @@ public class VistaMain {
                 Utils.alertWarn(String.join("\n", mensajes));
             }
 
-            // Limpiar campos
             tfCantidad.clear();
             tfNota.clear();
             tfCantidad.requestFocus();
@@ -312,7 +329,7 @@ public class VistaMain {
         }
     }
 
-
+   
     private void onEdit() {
         GastoRow sel = table.getSelectionModel().getSelectedItem();
         if (sel == null) {
@@ -424,49 +441,48 @@ public class VistaMain {
         Utils.openDialog(root, "Filtros de gastos", dlg.getRoot(), 420, 260);
 
         if (dlg.isOk()) {
-            CriteriosFiltroGastos c = dlg.getCriterios();
-            List<Gasto> filtrados = ctrl.filtrarGastos(c.getDesde(), c.getHasta(), c.getCategoriaId());
-            cargarTabla(filtrados);
+            var c = dlg.getCriterios();
+            cargarTabla(ctrl.filtrarGastos(c.getDesde(), c.getHasta(), c.getCategoriaId()));
         }
     }
 
     private void onOpenCategorias() {
         VistaCategorias dlg = new VistaCategorias();
         Utils.openDialog(root, "Categorías", dlg.getRoot(), 520, 420);
+
         cbCategoria.getItems().setAll(ctrl.listarCategorias());
         cargarTabla(ctrl.listarGastos());
     }
 
-    // ================= Datos / Helpers =================
-    private void cargarTabla(final List<Gasto> gastos) {
+    private void cargarTabla(List<Gasto> gastos) {
         rows.setAll(
                 gastos.stream()
-                      .map(g -> new GastoRow(
-                              g,
-                              g.getFecha(),
-                              nombreCategoria(g.getCategoriaId()),
-                              g.getCantidad(),
-                              g.getNota()))
-                      .toList()
+                        .map(g -> new GastoRow(
+                                g,
+                                g.getFecha(),
+                                nombreCategoria(g.getCategoriaId()),
+                                g.getCantidad(),
+                                g.getNota()))
+                        .toList()
         );
 
         BigDecimal total = gastos.stream()
-                                 .map(Gasto::getCantidad)
-                                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .map(Gasto::getCantidad)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         lblTotal.setText("Total: " + MONEY.format(total));
     }
 
-    private String nombreCategoria(final java.util.UUID id) {
+    private String nombreCategoria(java.util.UUID id) {
         return ctrl.listarCategorias()
-                   .stream()
-                   .filter(c -> c.getId().equals(id))
-                   .findFirst()
-                   .map(Categoria::getNombre)
-                   .orElse("");
+                .stream()
+                .filter(c -> c.getId().equals(id))
+                .findFirst()
+                .map(Categoria::getNombre)
+                .orElse("");
     }
 
-    private static void aplicarFormatterDecimal(final TextField tf) {
+    private static void aplicarFormatterDecimal(TextField tf) {
         tf.setTextFormatter(new TextFormatter<>(change -> {
             String nxt = change.getControlNewText();
             return nxt.matches("\\d{0,10}([\\.,]\\d{0,2})?") ? change : null;
@@ -474,14 +490,27 @@ public class VistaMain {
     }
 
     private static BigDecimal parseCantidad(String txt) {
-        if (txt.isBlank()) {
+        if (txt.isBlank())
             throw new IllegalArgumentException("Introduce una cantidad.");
-        }
         txt = txt.replace(',', '.');
         return new BigDecimal(txt);
     }
 
-    // ================= DTO fila =================
+    private void actualizarComboCuentas() {
+        cbCuenta.getItems().clear();
+
+        cbCuenta.getItems().add("Personal");
+
+        ctrl.getServicioCuentas().listar()
+                .forEach(c -> cbCuenta.getItems().add(c));
+
+        cbCuenta.getSelectionModel().selectFirst();
+    }
+
+    // ============================================================
+    // DTO FILA TABLA
+    // ============================================================
+
     public static class GastoRow {
 
         private final Gasto original;
@@ -490,11 +519,7 @@ public class VistaMain {
         private final BigDecimal cantidad;
         private final String nota;
 
-        public GastoRow(final Gasto original,
-                        final LocalDate fecha,
-                        final String categoria,
-                        final BigDecimal cantidad,
-                        final String nota) {
+        public GastoRow(Gasto original, LocalDate fecha, String categoria, BigDecimal cantidad, String nota) {
             this.original = original;
             this.fecha = fecha;
             this.categoria = categoria;

@@ -12,7 +12,9 @@ public class Gasto {
     private UUID categoriaId;        
     private String nota;             
     private UUID cuentaCompartidaId; 
-    private UUID personaId;          
+    private UUID personaId;     
+    private UUID usuarioId;
+
     
     private transient String categoriaNombreTemp;
     //usamos transient para no afectar a JSON
@@ -93,6 +95,14 @@ public class Gasto {
     
     public String getCategoriaNombreTemp() {
         return categoriaNombreTemp;
+    }
+    
+    public UUID getUsuarioId() { 
+    	return usuarioId; 
+    }
+    
+    public void setUsuarioId(UUID usuarioId) { 
+    	this.usuarioId = usuarioId; 
     }
     
 
