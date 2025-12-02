@@ -8,4 +8,14 @@
   "personaId" : null,
   "usuarioId" : "8658ea32-6e4f-4769-916c-93dfffcfe5a7",
   "categoriaNombreTemp" : null
+}, {
+  "id" : "893026d7-b208-4176-b6a3-2fd744ae1d23",
+  "cantidad" : 100,
+  "fecha" : [ 2025, 12, 2 ],
+  "categoriaId" : "eb062dbe-7c89-4ecf-b315-0604d8e526a0",
+  "nota" : "tren",
+  "cuentaCompartidaId" : "1107353b-175e-40ce-b811-cb3ae282d9c8",
+  "personaId" : null,
+  "usuarioId" : "8658ea32-6e4f-4769-916c-93dfffcfe5a7",
+  "categoriaNombreTemp" : null
 } ]

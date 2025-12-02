@@ -104,8 +104,12 @@ public class VistaCuentasCompartidas {
         VistaCuentaForm form = new VistaCuentaForm(null);
         Utils.openDialog(root, "Nueva cuenta compartida", form.getRoot(), 520, 520);
         if (form.isOk()) {
-            ctrl.getServicioCuentas().crear(form.getNombre(), form.getParticipaciones());
-            refresh();
+            try {
+                ctrl.getServicioCuentas().crear(form.getNombre(), form.getParticipaciones());
+                refresh();
+            } catch (IllegalArgumentException ex) {
+                Utils.alertWarn(ex.getMessage());
+            }
         }
     }
 
@@ -117,8 +121,8 @@ public class VistaCuentasCompartidas {
         Utils.openDialog(root, "Editar cuenta", form.getRoot(), 520, 520);
 
         if (form.isOk()) {
+            // Solo permitimos cambiar el nombre; la lista de participantes no se toca
             sel.setNombre(form.getNombre());
-            sel.setParticipantes(form.getParticipaciones());
             ctrl.getServicioCuentas().actualizar(sel);
             refresh();
         }

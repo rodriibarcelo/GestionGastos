@@ -4,7 +4,6 @@ import gestiongastos.controlador.Controlador;
 import gestiongastos.dominio.CuentaCompartida;
 import gestiongastos.dominio.Participacion;
 import gestiongastos.dominio.Usuario;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -33,14 +32,27 @@ public class VistaCuentaForm {
         root.setPadding(new Insets(16));
 
         // ------------------------------------------
-        // CABECERA
+        // CONTENEDOR CENTRAL (nombre + lista usuarios)
         // ------------------------------------------
+        VBox contenido = new VBox(10);
+        contenido.setPadding(new Insets(0));
+        root.setCenter(contenido);
+
+        // --- Fila nombre de la cuenta ---
+        HBox filaNombre = new HBox(8);
+        filaNombre.setAlignment(Pos.CENTER_LEFT);
+
+        Label lblNombre = new Label("Nombre de la cuenta:");
         tfNombre = new TextField();
-        tfNombre.setPromptText("Nombre de la cuenta");
+        tfNombre.setPromptText("Ej. Viaje a Madrid");
+        tfNombre.setPrefWidth(260);
 
         if (original != null) {
             tfNombre.setText(original.getNombre());
         }
+
+        filaNombre.getChildren().addAll(lblNombre, tfNombre);
+        contenido.getChildren().add(filaNombre);
 
         // ------------------------------------------
         // LISTA DE USUARIOS CON CHECK + PORCENTAJE
@@ -52,7 +64,9 @@ public class VistaCuentaForm {
 
         ScrollPane scroll = new ScrollPane(listaUsuarios);
         scroll.setFitToWidth(true);
-        root.setCenter(scroll);
+        scroll.setPrefViewportHeight(260);
+
+        contenido.getChildren().add(scroll);
 
         // ------------------------------------------
         // BOTONES
@@ -96,7 +110,7 @@ public class VistaCuentaForm {
                 UUID userId = entry.getKey();
                 String txt = mapaPorcentajes.get(userId).getText().trim();
 
-                double porcentaje = txt.isBlank() ? 0 : Double.parseDouble(txt);
+                double porcentaje = txt.isBlank() ? 0 : Double.parseDouble(txt.replace(',', '.'));
 
                 list.add(new Participacion(userId, null, porcentaje));
             }
@@ -122,6 +136,8 @@ public class VistaCuentaForm {
         }
 
         listaUsuarios.getChildren().clear();
+        mapaChecks.clear();
+        mapaPorcentajes.clear();
 
         for (Usuario u : usuarios) {
 
@@ -132,6 +148,9 @@ public class VistaCuentaForm {
             tf.setPromptText("%");
             tf.setPrefWidth(60);
             mapaPorcentajes.put(u.getId(), tf);
+
+            // Habilitar/deshabilitar campo % según el check
+            tf.disableProperty().bind(chk.selectedProperty().not());
 
             // Si estamos editando…
             if (porcentajesIniciales.containsKey(u.getId())) {
@@ -159,6 +178,7 @@ public class VistaCuentaForm {
 
         double total = 0;
         int seleccionados = 0;
+        boolean algunoConPorcentaje = false;
 
         for (var entry : mapaChecks.entrySet()) {
             if (entry.getValue().isSelected()) {
@@ -167,12 +187,18 @@ public class VistaCuentaForm {
                 String txt = mapaPorcentajes.get(entry.getKey())
                         .getText().trim();
 
-                if (!txt.matches("\\d{1,3}(\\.\\d{1,2})?")) {
-                    Utils.alertWarn("Formato de porcentaje inválido.");
-                    return;
-                }
+                // Si el campo está vacío, lo tratamos como 0 (reparto equitativo posible)
+                if (!txt.isBlank()) {
 
-                total += Double.parseDouble(txt);
+                    if (!txt.matches("\\d{1,3}([\\.,]\\d{1,2})?")) {
+                        Utils.alertWarn("Formato de porcentaje inválido (usa números como 40 o 33.33).");
+                        return;
+                    }
+
+                    double valor = Double.parseDouble(txt.replace(',', '.'));
+                    total += valor;
+                    algunoConPorcentaje = true;
+                }
             }
         }
 
@@ -181,8 +207,10 @@ public class VistaCuentaForm {
             return;
         }
 
-        if (Math.abs(total - 100.0) > 0.001) {
-            Utils.alertWarn("La suma total de porcentajes debe ser 100%.");
+        // Si el usuario ha puesto porcentajes, la suma debe ser 100.
+        // Si los deja todos en blanco, el servicio hará reparto equitativo.
+        if (algunoConPorcentaje && Math.abs(total - 100.0) > 0.01) {
+            Utils.alertWarn("La suma total de porcentajes debe ser 100% (actualmente es " + total + ").");
             return;
         }
 

@@ -1,14 +1,22 @@
 package gestiongastos.importador;
 
+import java.util.Map;
+
 public class ImportadorFactory {
 
-    public static ImportadorGastos crear(String extension) {
+    private static final Map<String, ImportadorGastos> IMPORTADORES = Map.of(
+            "csv", new ImportadorCSV()
+    );
 
-        extension = extension.toLowerCase();
+    public static ImportadorGastos crear(String tipo) {
+        if (tipo == null)
+            throw new IllegalArgumentException("Tipo de importador no puede ser null");
 
-        return switch (extension) {
-            case "csv" -> new ImportadorCSV();
-            default -> throw new IllegalArgumentException("Formato no soportado: " + extension);
-        };
+        ImportadorGastos imp = IMPORTADORES.get(tipo.toLowerCase());
+
+        if (imp == null)
+            throw new IllegalArgumentException("Tipo de importador no soportado: " + tipo);
+
+        return imp;
     }
 }

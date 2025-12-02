@@ -74,8 +74,9 @@ public class VistaMain {
         MenuItem miCategorias = new MenuItem("Categorías…");
         MenuItem miImportar = new MenuItem("Importar gastos…");
         MenuItem miAlertas = new MenuItem("Configurar alertas…");
+        MenuItem miCuentas = new MenuItem("Cuentas compartidas…");
 
-        menuDatos.getItems().addAll(miCategorias, miImportar, miAlertas);
+        menuDatos.getItems().addAll(miCategorias, miImportar, miAlertas, miCuentas);
 
         Menu menuVer = new Menu("Ver");
         MenuItem miEstadisticas = new MenuItem("Estadísticas…");
@@ -134,7 +135,23 @@ public class VistaMain {
         cbCategoria = new ComboBox<>(FXCollections.observableArrayList(ctrl.listarCategorias()));
         cbCategoria.setMaxWidth(Double.MAX_VALUE);
 
+        // Combo de cuentas
         cbCuenta = new ComboBox<>();
+        cbCuenta.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Object value) {
+                if (value == null) return "";
+                if (value instanceof CuentaCompartida c) return c.getNombre();
+                return value.toString();   // "Personal"
+            }
+
+            @Override
+            public Object fromString(String s) {
+                return s; // no lo usamos
+            }
+        });
+
+        // cargar opciones ("Personal" + cuentas compartidas)
         actualizarComboCuentas();
 
         tfNota = new TextField();
@@ -173,6 +190,11 @@ public class VistaMain {
         table.setItems(rows);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
+
+        TableColumn<GastoRow, String> cCuenta = new TableColumn<>("Cuenta");
+        cCuenta.setCellValueFactory(new PropertyValueFactory<>("cuenta"));
+        cCuenta.setMinWidth(140);
+        
         TableColumn<GastoRow, LocalDate> cFecha = new TableColumn<>("Fecha");
         cFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
         cFecha.setMinWidth(110);
@@ -183,6 +205,8 @@ public class VistaMain {
                 setText(empty || item == null ? null : DF.format(item));
             }
         });
+
+
 
         TableColumn<GastoRow, String> cCat = new TableColumn<>("Categoría");
         cCat.setCellValueFactory(new PropertyValueFactory<>("categoria"));
@@ -204,7 +228,8 @@ public class VistaMain {
         cNota.setCellValueFactory(new PropertyValueFactory<>("nota"));
         cNota.setMinWidth(180);
 
-        table.getColumns().setAll(cFecha, cCat, cCant, cNota);
+        // añadimos la columna Cuenta en la tabla
+        table.getColumns().setAll(cCuenta,cFecha, cCat, cCant, cNota);
 
         // Menú contextual
         MenuItem miEditCtx = new MenuItem("Editar");
@@ -257,6 +282,12 @@ public class VistaMain {
         miCalendario.setOnAction(e -> {
             VistaCalendario vc = new VistaCalendario();
             Utils.openDialog(root, "Calendario de Gastos", vc.getRoot(), 900, 700);
+        });
+
+        miCuentas.setOnAction(e -> {
+            VistaCuentasCompartidas vc = new VistaCuentasCompartidas();
+            Utils.openDialog(root, "Cuentas compartidas", vc.getRoot(), 600, 500);
+            actualizarComboCuentas(); // refresca el combo de la pantalla principal
         });
 
         btnEdit.disableProperty().bind(Bindings.isNull(table.getSelectionModel().selectedItemProperty()));
@@ -329,7 +360,6 @@ public class VistaMain {
         }
     }
 
-   
     private void onEdit() {
         GastoRow sel = table.getSelectionModel().getSelectedItem();
         if (sel == null) {
@@ -461,6 +491,7 @@ public class VistaMain {
                                 g,
                                 g.getFecha(),
                                 nombreCategoria(g.getCategoriaId()),
+                                nombreCuenta(g),           // CUENTA
                                 g.getCantidad(),
                                 g.getNota()))
                         .toList()
@@ -482,6 +513,23 @@ public class VistaMain {
                 .orElse("");
     }
 
+    // Devuelve el nombre de la cuenta a mostrar en la tabla
+    private String nombreCuenta(Gasto g) {
+        // ⚠️ AJUSTA AQUÍ el getter según tu clase Gasto
+        var cuentaId = g.getCuentaCompartidaId(); // por ejemplo: getCuentaCompartidaId()
+
+        if (cuentaId == null) {
+            return "Personal";
+        }
+
+        return ctrl.getServicioCuentas().listar()
+                .stream()
+                .filter(c -> c.getId().equals(cuentaId))
+                .findFirst()
+                .map(CuentaCompartida::getNombre)
+                .orElse("Cuenta compartida");
+    }
+
     private static void aplicarFormatterDecimal(TextField tf) {
         tf.setTextFormatter(new TextFormatter<>(change -> {
             String nxt = change.getControlNewText();
@@ -499,8 +547,10 @@ public class VistaMain {
     private void actualizarComboCuentas() {
         cbCuenta.getItems().clear();
 
+        // opción por defecto
         cbCuenta.getItems().add("Personal");
 
+        // añadir todas las cuentas compartidas
         ctrl.getServicioCuentas().listar()
                 .forEach(c -> cbCuenta.getItems().add(c));
 
@@ -516,13 +566,20 @@ public class VistaMain {
         private final Gasto original;
         private final LocalDate fecha;
         private final String categoria;
+        private final String cuenta;      // NUEVO
         private final BigDecimal cantidad;
         private final String nota;
 
-        public GastoRow(Gasto original, LocalDate fecha, String categoria, BigDecimal cantidad, String nota) {
+        public GastoRow(Gasto original,
+                        LocalDate fecha,
+                        String categoria,
+                        String cuenta,
+                        BigDecimal cantidad,
+                        String nota) {
             this.original = original;
             this.fecha = fecha;
             this.categoria = categoria;
+            this.cuenta = cuenta;
             this.cantidad = cantidad;
             this.nota = nota;
         }
@@ -537,6 +594,10 @@ public class VistaMain {
 
         public String getCategoria() {
             return categoria;
+        }
+
+        public String getCuenta() {
+            return cuenta;
         }
 
         public BigDecimal getCantidad() {

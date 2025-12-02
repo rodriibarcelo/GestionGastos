@@ -11,58 +11,44 @@ import java.util.UUID;
 
 public class CuentaCompartidaRepositoryJson implements CuentaCompartidaRepository {
 
-    private static final CuentaCompartidaRepositoryJson INSTANCE = new CuentaCompartidaRepositoryJson();
-
     private final Path filePath;
-    private final List<CuentaCompartida> datos;
+    private final List<CuentaCompartida> cuentas;
 
-    private CuentaCompartidaRepositoryJson() {
-        this.filePath = Path.of("data", "cuentas_compartidas.json");
-        this.datos = new ArrayList<>(
+    public CuentaCompartidaRepositoryJson() {
+        // data/cuentas_compartidas.json (igual estilo que usuarios.json)
+        this.filePath = Path.of("data", "cuentas_compartidas.json").toAbsolutePath();
+        this.cuentas = new ArrayList<>(
                 JsonStorage.loadList(filePath, new TypeReference<List<CuentaCompartida>>() {})
         );
     }
 
-    public static CuentaCompartidaRepositoryJson getInstance() {
-        return INSTANCE;
+    @Override
+    public List<CuentaCompartida> findAll() {
+        return new ArrayList<>(cuentas);
     }
 
     @Override
-    public synchronized List<CuentaCompartida> findAll() {
-        return List.copyOf(datos);
+    public Optional<CuentaCompartida> findById(UUID id) {
+        return cuentas.stream()
+                .filter(c -> c.getId().equals(id))
+                .findFirst();
     }
 
     @Override
-    public synchronized Optional<CuentaCompartida> findById(UUID id) {
-        return datos.stream()
-                    .filter(c -> c.getId().equals(id))
-                    .findFirst();
-    }
-
-    @Override
-    public synchronized void save(CuentaCompartida cuenta) {
-        datos.add(cuenta);
+    public void save(CuentaCompartida cuenta) {
+        // si ya existe, la reemplazamos
+        cuentas.removeIf(c -> c.getId().equals(cuenta.getId()));
+        cuentas.add(cuenta);
         flush();
     }
 
     @Override
-    public synchronized void update(CuentaCompartida cuenta) {
-        for (int i = 0; i < datos.size(); i++) {
-            if (datos.get(i).getId().equals(cuenta.getId())) {
-                datos.set(i, cuenta);
-                flush();
-                return;
-            }
-        }
-    }
-
-    @Override
-    public synchronized void deleteById(UUID id) {
-        datos.removeIf(c -> c.getId().equals(id));
+    public void deleteById(UUID id) {
+        cuentas.removeIf(c -> c.getId().equals(id));
         flush();
     }
 
     private void flush() {
-        JsonStorage.saveList(filePath, datos);
+        JsonStorage.saveList(filePath, cuentas);
     }
 }

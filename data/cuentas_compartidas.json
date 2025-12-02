@@ -1,0 +1,20 @@
+[ {
+  "id" : "1107353b-175e-40ce-b811-cb3ae282d9c8",
+  "nombre" : "viaje a madrid de mierda",
+  "participantes" : [ {
+    "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+    "cuentaId" : null,
+    "porcentaje" : 33.33,
+    "saldo" : -33.33
+  }, {
+    "usuarioId" : "8658ea32-6e4f-4769-916c-93dfffcfe5a7",
+    "cuentaId" : null,
+    "porcentaje" : 33.33,
+    "saldo" : 66.67
+  }, {
+    "usuarioId" : "69a3b403-7d8b-4baa-9a3a-a0a517d54d37",
+    "cuentaId" : null,
+    "porcentaje" : 33.34,
+    "saldo" : -33.34
+  } ]
+} ]

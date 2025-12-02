@@ -14,8 +14,6 @@ public interface CuentaCompartidaRepository {
 
     void save(CuentaCompartida cuenta);
 
-    void update(CuentaCompartida cuenta);
-
     void deleteById(UUID id);
 }
 	

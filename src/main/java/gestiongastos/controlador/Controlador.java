@@ -9,6 +9,7 @@ import gestiongastos.dominio.Usuario;
 import gestiongastos.persistencia.UsuarioRepository;
 import gestiongastos.persistencia.UsuarioRepositoryJson;
 import gestiongastos.persistencia.CategoriaRepositoryJson;
+import gestiongastos.persistencia.CuentaCompartidaRepositoryJson;
 import gestiongastos.persistencia.GastoRepositoryJson;
 
 import gestiongastos.servicio.ServicioCategorias;
@@ -35,8 +36,8 @@ public class Controlador {
             new ServicioCategorias(CategoriaRepositoryJson.getInstance());
 
     private final ServicioCuentasCompartidas servicioCuentas =
-            new ServicioCuentasCompartidas();
-    
+            new ServicioCuentasCompartidas(new CuentaCompartidaRepositoryJson());
+
     private Usuario usuarioActual;
 
 
@@ -141,15 +142,26 @@ public class Controlador {
         return gestorAlertas.evaluar(g, servicioGastos.listar());
     }
 
-    public List<String> registrarGastoCompartido(BigDecimal cantidad, LocalDate fecha, UUID categoriaId, UUID cuentaCompartidaId, String nota) {
+    public List<String> registrarGastoCompartido(BigDecimal cantidad, LocalDate fecha,
+            UUID categoriaId, UUID cuentaCompartidaId, String nota) {
 
-        Gasto g = new Gasto(cantidad, fecha, categoriaId, nota);
-        g.setCuentaCompartidaId(cuentaCompartidaId);
+		Gasto g = new Gasto(cantidad, fecha, categoriaId, nota);
+		g.setUsuarioId(usuarioActual.getId());           // quién lo registra en la app
+		g.setCuentaCompartidaId(cuentaCompartidaId);
+		
+		servicioGastos.registrar(g);
+		
+		// ACTUALIZAR SALDOS DE LA CUENTA COMPARTIDA
+		servicioCuentas.registrarGastoEnCuenta(
+		cuentaCompartidaId,
+		usuarioActual.getId(),                   // pagador dentro de la cuenta
+		cantidad
+		);
 
-        servicioGastos.registrar(g);
-
-        return gestorAlertas.evaluar(g, servicioGastos.listar());
+		return gestorAlertas.evaluar(g, servicioGastos.listar());
     }
+
+
 
     public List<Gasto> listarGastos() {
         return servicioGastos.listar().stream()
