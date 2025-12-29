@@ -4,6 +4,7 @@ import gestiongastos.alertas.AlertaStrategy;
 import gestiongastos.alertas.GestorAlertas;
 import gestiongastos.dominio.Categoria;
 import gestiongastos.dominio.Gasto;
+import gestiongastos.dominio.Notificacion;
 import gestiongastos.dominio.Usuario;
 
 import gestiongastos.persistencia.UsuarioRepository;
@@ -11,7 +12,8 @@ import gestiongastos.persistencia.UsuarioRepositoryJson;
 import gestiongastos.persistencia.CategoriaRepositoryJson;
 import gestiongastos.persistencia.CuentaCompartidaRepositoryJson;
 import gestiongastos.persistencia.GastoRepositoryJson;
-
+import gestiongastos.persistencia.NotificacionRepository;
+import gestiongastos.persistencia.NotificacionRepositoryJson;
 import gestiongastos.servicio.ServicioCategorias;
 import gestiongastos.servicio.ServicioCuentasCompartidas;
 import gestiongastos.servicio.ServicioGastos;
@@ -26,8 +28,11 @@ public class Controlador {
 
     private static final Controlador INSTANCE = new Controlador();
 
-    // (no hay ServicioUsuarios)
     private final UsuarioRepository repoUsuarios = UsuarioRepositoryJson.getInstance();
+    
+    private final NotificacionRepository repoNotificaciones =
+            NotificacionRepositoryJson.getInstance();
+
 
     private final ServicioGastos servicioGastos =
             new ServicioGastos(GastoRepositoryJson.getInstance());
@@ -133,40 +138,89 @@ public class Controlador {
     // GASTOS
     // ============================================================
 
-    public List<String> registrarGasto(BigDecimal cantidad, LocalDate fecha, UUID categoriaId, String nota) {
+    public List<String> registrarGasto(final BigDecimal cantidad,
+            final LocalDate fecha,
+            final UUID categoriaId,
+            final String nota) {
 
-        Gasto g = new Gasto(cantidad, fecha, categoriaId, nota);
-        g.setUsuarioId(usuarioActual.getId());
-        servicioGastos.registrar(g);
+    	if (usuarioActual == null) {
+    		throw new IllegalStateException("No hay usuario autenticado.");
+    	}
 
-        return gestorAlertas.evaluar(g, servicioGastos.listar());
+    	Gasto g = new Gasto(cantidad, fecha, categoriaId, nota);
+    	g.setUsuarioId(usuarioActual.getId());
+
+    	servicioGastos.registrar(g);
+
+    	List<Gasto> historico = servicioGastos.listar()
+    			.stream()
+    			.filter(x -> x.getUsuarioId() != null)
+    			.filter(x -> x.getUsuarioId().equals(usuarioActual.getId()))
+    			.collect(java.util.stream.Collectors.toList());
+
+    	List<String> mensajes = gestorAlertas.evaluar(g, historico);
+
+    	// Persistir notificaciones en historial
+    	for (String msg : mensajes) {
+    		repoNotificaciones.save(new gestiongastos.dominio.Notificacion(usuarioActual.getId(), msg));
+    	}
+
+    	return mensajes;
     }
 
-    public List<String> registrarGastoCompartido(BigDecimal cantidad, LocalDate fecha,
-            UUID categoriaId, UUID cuentaCompartidaId, String nota) {
 
-		Gasto g = new Gasto(cantidad, fecha, categoriaId, nota);
-		g.setUsuarioId(usuarioActual.getId());           // quién lo registra en la app
-		g.setCuentaCompartidaId(cuentaCompartidaId);
-		
-		servicioGastos.registrar(g);
-		
-		// ACTUALIZAR SALDOS DE LA CUENTA COMPARTIDA
-		servicioCuentas.registrarGastoEnCuenta(
-		cuentaCompartidaId,
-		usuarioActual.getId(),                   // pagador dentro de la cuenta
-		cantidad
-		);
+    public List<String> registrarGastoCompartido(final BigDecimal cantidad,
+            final LocalDate fecha,
+            final UUID categoriaId,
+            final UUID cuentaCompartidaId,
+            final String nota) {
 
-		return gestorAlertas.evaluar(g, servicioGastos.listar());
+    	if (usuarioActual == null) {
+    		throw new IllegalStateException("No hay usuario autenticado.");
+    	}
+
+    	Gasto g = new Gasto(cantidad, fecha, categoriaId, nota);
+    	g.setUsuarioId(usuarioActual.getId());
+    	g.setCuentaCompartidaId(cuentaCompartidaId);
+
+    	servicioGastos.registrar(g);
+
+    	servicioCuentas.registrarGastoEnCuenta(
+    			cuentaCompartidaId,
+    			usuarioActual.getId(),
+    			cantidad
+    			);
+
+    	List<Gasto> historico = servicioGastos.listar()
+    			.stream()
+    			.filter(x -> x.getUsuarioId() != null)
+    			.filter(x -> x.getUsuarioId().equals(usuarioActual.getId()))
+    			.collect(java.util.stream.Collectors.toList());
+
+    	List<String> mensajes = gestorAlertas.evaluar(g, historico);
+
+    	// Persistir notificaciones en historial
+    	for (String msg : mensajes) {
+    		repoNotificaciones.save(new gestiongastos.dominio.Notificacion(usuarioActual.getId(), msg));
+    	}
+
+    	return mensajes;
     }
+
 
 
 
     public List<Gasto> listarGastos() {
-        return servicioGastos.listar().stream()
+
+        if (usuarioActual == null) {
+            throw new IllegalStateException("No hay usuario autenticado.");
+        }
+
+        return servicioGastos.listar()
+                .stream()
+                .filter(g -> g.getUsuarioId() != null)
                 .filter(g -> g.getUsuarioId().equals(usuarioActual.getId()))
-                .toList();
+                .collect(java.util.stream.Collectors.toList());
     }
 
 
@@ -200,4 +254,13 @@ public class Controlador {
     public void configurarAlertas(List<AlertaStrategy> estrategias) {
         gestorAlertas.setEstrategias(estrategias);
     }
+    
+    //Notificaciones
+    public List<Notificacion> listarNotificaciones() {
+        if (usuarioActual == null) {
+            throw new IllegalStateException("No hay usuario autenticado.");
+        }
+        return repoNotificaciones.findByUsuario(usuarioActual.getId());
+    }
+
 }
