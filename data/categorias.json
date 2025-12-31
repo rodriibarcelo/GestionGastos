@@ -10,4 +10,64 @@
   "id" : "6316a956-5fa7-4ed4-b9f0-b37bd6dd277f",
   "nombre" : "Ocio",
   "colorHex" : "#F5A24C"
+}, {
+  "id" : "450d732d-b5b3-49ca-bf43-56724ba36acb",
+  "nombre" : "con tarjeta / Comida",
+  "colorHex" : "#888888"
+}, {
+  "id" : "391d0319-470c-42b3-9927-5186d9b0fbed",
+  "nombre" : "efectivo / Transporte Público",
+  "colorHex" : "#888888"
+}, {
+  "id" : "ba6bfca8-6808-4c55-b599-89d4c6fb828a",
+  "nombre" : "on line / Ocio",
+  "colorHex" : "#888888"
+}, {
+  "id" : "f85aa910-d77b-4a80-a82a-b4e4b418887d",
+  "nombre" : "con tarjeta / Gasolina",
+  "colorHex" : "#888888"
+}, {
+  "id" : "d84f0bd3-5687-4187-9fd0-97c663070fc3",
+  "nombre" : "efectivo / Ocio",
+  "colorHex" : "#888888"
+}, {
+  "id" : "58e39def-c36f-4afd-a343-4e78393d348a",
+  "nombre" : "on line / Regalos",
+  "colorHex" : "#888888"
+}, {
+  "id" : "88e8e857-04c9-44fd-887c-94b10fbc8cfd",
+  "nombre" : "con paypal / Ocio",
+  "colorHex" : "#888888"
+}, {
+  "id" : "3e800948-af32-41cb-bfe0-0bf20feae471",
+  "nombre" : "efectivo / Gasolina",
+  "colorHex" : "#888888"
+}, {
+  "id" : "f1e885f5-cdc3-4928-92fa-f6a06bcc2c6b",
+  "nombre" : "con tarjeta / Reparaciones",
+  "colorHex" : "#888888"
+}, {
+  "id" : "e5daca91-75a1-411c-8150-36e9f26f7fe0",
+  "nombre" : "on line / Transporte Público",
+  "colorHex" : "#888888"
+}, {
+  "id" : "0e1a448c-8cc8-4fb7-b058-ea14dd791fb4",
+  "nombre" : "efectivo / Comida",
+  "colorHex" : "#888888"
+}, {
+  "id" : "2f42be88-c0dc-4f1c-8217-880f17252f83",
+  "nombre" : "con tarjeta / Ocio",
+  "colorHex" : "#888888"
+}, {
+  "id" : "7ec72fc4-afad-4507-8799-089dfe823cb6",
+  "nombre" : "on line / Gastos Médicos",
+  "colorHex" : "#888888"
+}, {
+  "id" : "8f60fdb5-2014-4338-92d5-ddf6fc38112d",
+  "nombre" : "con tarjeta / Regalos",
+  "colorHex" : "#888888"
+}, {
+  "id" : "842e5ce2-18e5-461d-b8e7-8e06394bdd3e",
+  "nombre" : "on line / Comida",
+  "colorHex" : "#888888"
 } ]

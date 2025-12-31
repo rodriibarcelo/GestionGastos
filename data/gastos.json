@@ -18,4 +18,644 @@
   "personaId" : null,
   "usuarioId" : "8658ea32-6e4f-4769-916c-93dfffcfe5a7",
   "categoriaNombreTemp" : null
+}, {
+  "id" : "8cc9fb2b-6aac-4b18-90bc-04bec7407eb5",
+  "cantidad" : 123.50,
+  "fecha" : [ 2025, 12, 24 ],
+  "categoriaId" : "00ae7e04-a04d-418b-9d90-5631becbf67d",
+  "nota" : "Cena Noche Buena",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "9d28ef50-dd09-4b29-a3b6-a96694298621",
+  "cantidad" : 35,
+  "fecha" : [ 2025, 12, 22 ],
+  "categoriaId" : "6316a956-5fa7-4ed4-b9f0-b37bd6dd277f",
+  "nota" : "GYM",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "72cd6028-d40e-4d79-be83-77da26443dd6",
+  "cantidad" : 35,
+  "fecha" : [ 2025, 12, 26 ],
+  "categoriaId" : "00ae7e04-a04d-418b-9d90-5631becbf67d",
+  "nota" : "Cena de empresa",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "139ba649-4bfd-4f42-bf0d-1f7c13b05a07",
+  "cantidad" : 100,
+  "fecha" : [ 2025, 12, 16 ],
+  "categoriaId" : "00ae7e04-a04d-418b-9d90-5631becbf67d",
+  "nota" : "cena",
+  "cuentaCompartidaId" : "1107353b-175e-40ce-b811-cb3ae282d9c8",
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "95d121b6-cd11-4a25-b16d-ae9d4cb5d7da",
+  "cantidad" : 100,
+  "fecha" : [ 2025, 11, 16 ],
+  "categoriaId" : "00ae7e04-a04d-418b-9d90-5631becbf67d",
+  "nota" : "Mercadona",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "98ea29ca-cfe5-4464-8294-9975a18bbff5",
+  "cantidad" : 120,
+  "fecha" : [ 2025, 12, 31 ],
+  "categoriaId" : "eb062dbe-7c89-4ecf-b315-0604d8e526a0",
+  "nota" : "Taxi",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "c8dd0be1-246d-4951-ba46-a3b3f96ab6cd",
+  "cantidad" : 4.50,
+  "fecha" : [ 2022, 2, 3 ],
+  "categoriaId" : "450d732d-b5b3-49ca-bf43-56724ba36acb",
+  "nota" : "Desayuno en cafetería",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "cf51b95c-8770-4a29-82a7-e2d132d83a0f",
+  "cantidad" : 6.00,
+  "fecha" : [ 2022, 2, 3 ],
+  "categoriaId" : "391d0319-470c-42b3-9927-5186d9b0fbed",
+  "nota" : "Billetes de metro",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "0b78fd8e-6924-4f4f-8998-03dba82c4cff",
+  "cantidad" : 3.99,
+  "fecha" : [ 2022, 1, 3 ],
+  "categoriaId" : "ba6bfca8-6808-4c55-b599-89d4c6fb828a",
+  "nota" : "Alquiler de película en streaming",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "241cf62c-1992-4b46-8ccd-0f6899dc55b9",
+  "cantidad" : 45.00,
+  "fecha" : [ 2022, 1, 3 ],
+  "categoriaId" : "f85aa910-d77b-4a80-a82a-b4e4b418887d",
+  "nota" : "Repostaje en gasolinera",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "daaeb7d7-fb7f-4e4e-b87e-2ae2c7b54fe4",
+  "cantidad" : 18.50,
+  "fecha" : [ 2022, 1, 3 ],
+  "categoriaId" : "450d732d-b5b3-49ca-bf43-56724ba36acb",
+  "nota" : "Pizza para cenar",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "3d055fdf-8398-4704-9e81-35418907682c",
+  "cantidad" : 12.00,
+  "fecha" : [ 2022, 1, 3 ],
+  "categoriaId" : "d84f0bd3-5687-4187-9fd0-97c663070fc3",
+  "nota" : "Partida de billar en bar",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "8af1d4f5-3509-45b2-b7b3-0679c1a2e4cd",
+  "cantidad" : 1.50,
+  "fecha" : [ 2022, 1, 3 ],
+  "categoriaId" : "391d0319-470c-42b3-9927-5186d9b0fbed",
+  "nota" : "Billete de autobús urbano",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "ae6dccc8-af94-4a21-a5f9-8e19a96825e8",
+  "cantidad" : 9.90,
+  "fecha" : [ 2022, 2, 28 ],
+  "categoriaId" : "58e39def-c36f-4afd-a343-4e78393d348a",
+  "nota" : "Compra de taza personalizada",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "b26029b0-5504-4258-b60b-c8322b223b74",
+  "cantidad" : 32.40,
+  "fecha" : [ 2022, 2, 28 ],
+  "categoriaId" : "450d732d-b5b3-49ca-bf43-56724ba36acb",
+  "nota" : "Compra en supermercado",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "49eb2be5-fd9d-49d3-8967-47cd51bf78a9",
+  "cantidad" : 2.99,
+  "fecha" : [ 2022, 2, 27 ],
+  "categoriaId" : "88e8e857-04c9-44fd-887c-94b10fbc8cfd",
+  "nota" : "Juego para móvil",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "e633b882-8457-4457-a08e-e3a92db2661c",
+  "cantidad" : 21.00,
+  "fecha" : [ 2022, 2, 26 ],
+  "categoriaId" : "450d732d-b5b3-49ca-bf43-56724ba36acb",
+  "nota" : "Cena de hamburguesas",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "bd418edd-fa86-4976-b04a-78f87fe3576a",
+  "cantidad" : 30.00,
+  "fecha" : [ 2022, 2, 26 ],
+  "categoriaId" : "3e800948-af32-41cb-bfe0-0bf20feae471",
+  "nota" : "Repostaje coche compartido",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "b3d9ef26-e1ed-4e9d-a2f1-3ed1a0dde587",
+  "cantidad" : 7.50,
+  "fecha" : [ 2022, 2, 26 ],
+  "categoriaId" : "f1e885f5-cdc3-4928-92fa-f6a06bcc2c6b",
+  "nota" : "Cambio de bombilla del coche",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "3522a891-ceea-4965-af09-01b5f198757d",
+  "cantidad" : 20.00,
+  "fecha" : [ 2022, 2, 26 ],
+  "categoriaId" : "e5daca91-75a1-411c-8150-36e9f26f7fe0",
+  "nota" : "Recarga tarjeta de transporte",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "f460d43f-40ff-4f34-bc34-4b49a26f1147",
+  "cantidad" : 5.25,
+  "fecha" : [ 2022, 2, 26 ],
+  "categoriaId" : "0e1a448c-8cc8-4fb7-b058-ea14dd791fb4",
+  "nota" : "Bocadillo y refresco",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "18dc2a32-d5f8-4be6-9aba-a247cb94953f",
+  "cantidad" : 6.00,
+  "fecha" : [ 2022, 2, 26 ],
+  "categoriaId" : "2f42be88-c0dc-4f1c-8217-880f17252f83",
+  "nota" : "Cerveza en pub",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "5fdc95a0-0106-4393-ae3e-8f018cd26260",
+  "cantidad" : 12.75,
+  "fecha" : [ 2022, 2, 25 ],
+  "categoriaId" : "7ec72fc4-afad-4507-8799-089dfe823cb6",
+  "nota" : "Compra de vitaminas",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "6759bef3-c78a-4702-96a6-84dd2ce89dfc",
+  "cantidad" : 4.99,
+  "fecha" : [ 2022, 2, 24 ],
+  "categoriaId" : "88e8e857-04c9-44fd-887c-94b10fbc8cfd",
+  "nota" : "Compra de música digital",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "4b619734-d29f-4d89-9914-5df742d85460",
+  "cantidad" : 28.00,
+  "fecha" : [ 2022, 2, 24 ],
+  "categoriaId" : "450d732d-b5b3-49ca-bf43-56724ba36acb",
+  "nota" : "Cena en restaurante",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "89d17774-e3d0-4087-b8e9-ce18ec24493f",
+  "cantidad" : 11.00,
+  "fecha" : [ 2022, 2, 24 ],
+  "categoriaId" : "391d0319-470c-42b3-9927-5186d9b0fbed",
+  "nota" : "Taxi nocturno",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "6d964771-6874-4e3e-b3e6-fe2333075a5d",
+  "cantidad" : 15.00,
+  "fecha" : [ 2022, 2, 23 ],
+  "categoriaId" : "8f60fdb5-2014-4338-92d5-ddf6fc38112d",
+  "nota" : "Compra de tarjeta regalo",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "2e75dd19-05f4-4389-bdac-11596d2f8ace",
+  "cantidad" : 24.60,
+  "fecha" : [ 2022, 2, 23 ],
+  "categoriaId" : "842e5ce2-18e5-461d-b8e7-8e06394bdd3e",
+  "nota" : "Pedido de sushi a domicilio",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "a62e2383-c3bc-4f53-85bb-c437fa67b6e3",
+  "cantidad" : 20.00,
+  "fecha" : [ 2022, 2, 23 ],
+  "categoriaId" : "f85aa910-d77b-4a80-a82a-b4e4b418887d",
+  "nota" : "Repostaje rápido",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "3a744f0f-db44-4a66-b19a-5db689e6b828",
+  "cantidad" : 14.50,
+  "fecha" : [ 2022, 2, 22 ],
+  "categoriaId" : "391d0319-470c-42b3-9927-5186d9b0fbed",
+  "nota" : "Billete de tren",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "653c1c04-5b0c-4f54-bb31-d8f97aa959a6",
+  "cantidad" : 5.99,
+  "fecha" : [ 2022, 2, 21 ],
+  "categoriaId" : "88e8e857-04c9-44fd-887c-94b10fbc8cfd",
+  "nota" : "Alquiler de videojuego",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "ff018d27-de6b-4fd4-8684-4a04cae3a100",
+  "cantidad" : 19.80,
+  "fecha" : [ 2022, 2, 21 ],
+  "categoriaId" : "f1e885f5-cdc3-4928-92fa-f6a06bcc2c6b",
+  "nota" : "Compra de herramientas básicas",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "54824673-18a8-46c6-98c2-57ab3aa26d94",
+  "cantidad" : 8.40,
+  "fecha" : [ 2022, 2, 21 ],
+  "categoriaId" : "7ec72fc4-afad-4507-8799-089dfe823cb6",
+  "nota" : "Compra de termómetro digital",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "b25b36ff-ba5e-4eaf-bd7b-0016f70e297c",
+  "cantidad" : 3.20,
+  "fecha" : [ 2022, 2, 21 ],
+  "categoriaId" : "0e1a448c-8cc8-4fb7-b058-ea14dd791fb4",
+  "nota" : "Café y bollería",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "264b5793-2863-4a88-9b73-39ad541fa502",
+  "cantidad" : 16.00,
+  "fecha" : [ 2022, 2, 20 ],
+  "categoriaId" : "2f42be88-c0dc-4f1c-8217-880f17252f83",
+  "nota" : "Entradas para el cine",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "278f4bc9-6994-48c5-8030-3986127136b2",
+  "cantidad" : 4.50,
+  "fecha" : [ 2022, 2, 3 ],
+  "categoriaId" : "450d732d-b5b3-49ca-bf43-56724ba36acb",
+  "nota" : "Desayuno en cafetería",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "1af82ae4-ab92-4fdb-8556-3519c76a4768",
+  "cantidad" : 6.00,
+  "fecha" : [ 2022, 2, 3 ],
+  "categoriaId" : "391d0319-470c-42b3-9927-5186d9b0fbed",
+  "nota" : "Billetes de metro",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "f76ebfaa-f433-4c51-b50f-e09a4e2e709b",
+  "cantidad" : 3.99,
+  "fecha" : [ 2022, 1, 3 ],
+  "categoriaId" : "ba6bfca8-6808-4c55-b599-89d4c6fb828a",
+  "nota" : "Alquiler de película en streaming",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "2fe62322-622f-4855-8f1d-af4e12208576",
+  "cantidad" : 45.00,
+  "fecha" : [ 2022, 1, 3 ],
+  "categoriaId" : "f85aa910-d77b-4a80-a82a-b4e4b418887d",
+  "nota" : "Repostaje en gasolinera",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "908aaa49-8b64-4304-82bc-6eb21485d06a",
+  "cantidad" : 18.50,
+  "fecha" : [ 2022, 1, 3 ],
+  "categoriaId" : "450d732d-b5b3-49ca-bf43-56724ba36acb",
+  "nota" : "Pizza para cenar",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "eee1ea3b-c3b9-4555-8ddf-e0bf67914459",
+  "cantidad" : 12.00,
+  "fecha" : [ 2022, 1, 3 ],
+  "categoriaId" : "d84f0bd3-5687-4187-9fd0-97c663070fc3",
+  "nota" : "Partida de billar en bar",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "51abc1dc-b3f3-4650-8f21-e782b5de9eb1",
+  "cantidad" : 1.50,
+  "fecha" : [ 2022, 1, 3 ],
+  "categoriaId" : "391d0319-470c-42b3-9927-5186d9b0fbed",
+  "nota" : "Billete de autobús urbano",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "8ee822c5-a0d4-4472-a691-b2cd69004871",
+  "cantidad" : 9.90,
+  "fecha" : [ 2022, 2, 28 ],
+  "categoriaId" : "58e39def-c36f-4afd-a343-4e78393d348a",
+  "nota" : "Compra de taza personalizada",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "079280fe-e829-4b90-921e-3662fce60dfd",
+  "cantidad" : 32.40,
+  "fecha" : [ 2022, 2, 28 ],
+  "categoriaId" : "450d732d-b5b3-49ca-bf43-56724ba36acb",
+  "nota" : "Compra en supermercado",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "8260060a-4421-45a6-835a-a96ddeb8830c",
+  "cantidad" : 2.99,
+  "fecha" : [ 2022, 2, 27 ],
+  "categoriaId" : "88e8e857-04c9-44fd-887c-94b10fbc8cfd",
+  "nota" : "Juego para móvil",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "643b8007-50ba-4650-a9c4-f6516f15cbfd",
+  "cantidad" : 21.00,
+  "fecha" : [ 2022, 2, 26 ],
+  "categoriaId" : "450d732d-b5b3-49ca-bf43-56724ba36acb",
+  "nota" : "Cena de hamburguesas",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "c2f57017-5563-4739-8cf9-fe4d662f5c8c",
+  "cantidad" : 30.00,
+  "fecha" : [ 2022, 2, 26 ],
+  "categoriaId" : "3e800948-af32-41cb-bfe0-0bf20feae471",
+  "nota" : "Repostaje coche compartido",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "dae8be14-53d5-407b-bb91-71f49f32bd7d",
+  "cantidad" : 7.50,
+  "fecha" : [ 2022, 2, 26 ],
+  "categoriaId" : "f1e885f5-cdc3-4928-92fa-f6a06bcc2c6b",
+  "nota" : "Cambio de bombilla del coche",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "443f53eb-67b1-4e0f-b48f-b8f014381296",
+  "cantidad" : 20.00,
+  "fecha" : [ 2022, 2, 26 ],
+  "categoriaId" : "e5daca91-75a1-411c-8150-36e9f26f7fe0",
+  "nota" : "Recarga tarjeta de transporte",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "ef9ddd59-66fb-4f3e-a3ba-07cf76b0cf04",
+  "cantidad" : 5.25,
+  "fecha" : [ 2022, 2, 26 ],
+  "categoriaId" : "0e1a448c-8cc8-4fb7-b058-ea14dd791fb4",
+  "nota" : "Bocadillo y refresco",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "9a36a1d1-552b-4db1-bb72-bebd45dbd465",
+  "cantidad" : 6.00,
+  "fecha" : [ 2022, 2, 26 ],
+  "categoriaId" : "2f42be88-c0dc-4f1c-8217-880f17252f83",
+  "nota" : "Cerveza en pub",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "1c83ea11-7f87-4598-ad59-f8ac572f75fe",
+  "cantidad" : 12.75,
+  "fecha" : [ 2022, 2, 25 ],
+  "categoriaId" : "7ec72fc4-afad-4507-8799-089dfe823cb6",
+  "nota" : "Compra de vitaminas",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "3b6a39d0-c0ed-45a4-9dab-6560f2a907d6",
+  "cantidad" : 4.99,
+  "fecha" : [ 2022, 2, 24 ],
+  "categoriaId" : "88e8e857-04c9-44fd-887c-94b10fbc8cfd",
+  "nota" : "Compra de música digital",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "3661b69f-3b79-4071-acca-a6b638f51dbd",
+  "cantidad" : 28.00,
+  "fecha" : [ 2022, 2, 24 ],
+  "categoriaId" : "450d732d-b5b3-49ca-bf43-56724ba36acb",
+  "nota" : "Cena en restaurante",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "6378e57a-af85-4618-aaa6-79169c46d7e2",
+  "cantidad" : 11.00,
+  "fecha" : [ 2022, 2, 24 ],
+  "categoriaId" : "391d0319-470c-42b3-9927-5186d9b0fbed",
+  "nota" : "Taxi nocturno",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "6b7515cd-4745-4a38-b0bd-2e419e14d83d",
+  "cantidad" : 15.00,
+  "fecha" : [ 2022, 2, 23 ],
+  "categoriaId" : "8f60fdb5-2014-4338-92d5-ddf6fc38112d",
+  "nota" : "Compra de tarjeta regalo",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "f9caf72f-5c6c-4905-b90c-a0d5325c26ff",
+  "cantidad" : 24.60,
+  "fecha" : [ 2022, 2, 23 ],
+  "categoriaId" : "842e5ce2-18e5-461d-b8e7-8e06394bdd3e",
+  "nota" : "Pedido de sushi a domicilio",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "be7ba20e-5418-4dec-a7ac-ffd361bd28a0",
+  "cantidad" : 20.00,
+  "fecha" : [ 2022, 2, 23 ],
+  "categoriaId" : "f85aa910-d77b-4a80-a82a-b4e4b418887d",
+  "nota" : "Repostaje rápido",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "b6a4946a-2293-4351-ac49-95a94a196452",
+  "cantidad" : 14.50,
+  "fecha" : [ 2022, 2, 22 ],
+  "categoriaId" : "391d0319-470c-42b3-9927-5186d9b0fbed",
+  "nota" : "Billete de tren",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "128bb7bc-b691-4093-a43c-ea4ea7fde2b3",
+  "cantidad" : 5.99,
+  "fecha" : [ 2022, 2, 21 ],
+  "categoriaId" : "88e8e857-04c9-44fd-887c-94b10fbc8cfd",
+  "nota" : "Alquiler de videojuego",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "73febfb3-6998-4ad1-9dd8-3602ee2f3b0d",
+  "cantidad" : 19.80,
+  "fecha" : [ 2022, 2, 21 ],
+  "categoriaId" : "f1e885f5-cdc3-4928-92fa-f6a06bcc2c6b",
+  "nota" : "Compra de herramientas básicas",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "996a7ff0-8592-45b4-8cd2-f233b240b9b7",
+  "cantidad" : 8.40,
+  "fecha" : [ 2022, 2, 21 ],
+  "categoriaId" : "7ec72fc4-afad-4507-8799-089dfe823cb6",
+  "nota" : "Compra de termómetro digital",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "a881bc2b-dc98-4a75-bf39-143d186a0166",
+  "cantidad" : 3.20,
+  "fecha" : [ 2022, 2, 21 ],
+  "categoriaId" : "0e1a448c-8cc8-4fb7-b058-ea14dd791fb4",
+  "nota" : "Café y bollería",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
+}, {
+  "id" : "5e201319-e765-4afa-b9df-74b9cd41e185",
+  "cantidad" : 16.00,
+  "fecha" : [ 2022, 2, 20 ],
+  "categoriaId" : "2f42be88-c0dc-4f1c-8217-880f17252f83",
+  "nota" : "Entradas para el cine",
+  "cuentaCompartidaId" : null,
+  "personaId" : null,
+  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
+  "categoriaNombreTemp" : null
 } ]
