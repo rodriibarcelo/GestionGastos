@@ -2,6 +2,7 @@ package gestiongastos.servicio;
 
 import gestiongastos.dominio.CuentaCompartida;
 import gestiongastos.dominio.Participacion;
+import gestiongastos.dominio.Gasto;
 import gestiongastos.persistencia.CuentaCompartidaRepository;
 
 import java.math.BigDecimal;
@@ -94,4 +95,41 @@ public class ServicioCuentasCompartidas {
 		repo.save(sel);
 		
 	}
+
+    /**
+     * Recalcula los saldos de una cuenta compartida desde cero, a partir de la lista de gastos
+     * asociados a esa cuenta. Se usa tras editar/borrar gastos para mantener coherencia.
+     */
+    public void recalcularSaldos(UUID cuentaId, List<Gasto> gastosCuenta) {
+        CuentaCompartida cuenta = repo.findById(cuentaId)
+                .orElseThrow(() -> new IllegalArgumentException("Cuenta no encontrada"));
+
+        // 1) Resetear saldos
+        if (cuenta.getParticipantes() != null) {
+            for (Participacion p : cuenta.getParticipantes()) {
+                p.setSaldo(BigDecimal.ZERO);
+            }
+        }
+
+        // 2) Aplicar todos los gastos en orden (por fecha) para recomputar el estado
+        if (gastosCuenta != null) {
+            gastosCuenta.stream()
+                    .filter(g -> g.getCuentaCompartidaId() != null)
+                    .filter(g -> cuentaId.equals(g.getCuentaCompartidaId()))
+                    .sorted((a, b) -> {
+                        if (a.getFecha() == null && b.getFecha() == null) return 0;
+                        if (a.getFecha() == null) return -1;
+                        if (b.getFecha() == null) return 1;
+                        return a.getFecha().compareTo(b.getFecha());
+                    })
+                    .forEach(g -> {
+                        if (g.getUsuarioId() != null && g.getCantidad() != null) {
+                            cuenta.registrarGasto(g.getCantidad(), g.getUsuarioId());
+                        }
+                    });
+        }
+
+        repo.save(cuenta);
+    }
+
 }

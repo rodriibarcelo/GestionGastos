@@ -3,6 +3,7 @@ package gestiongastos.controlador;
 import gestiongastos.alertas.AlertaStrategy;
 import gestiongastos.alertas.GestorAlertas;
 import gestiongastos.dominio.Categoria;
+import gestiongastos.dominio.CuentaCompartida;
 import gestiongastos.dominio.Gasto;
 import gestiongastos.dominio.Notificacion;
 import gestiongastos.dominio.Usuario;
@@ -115,6 +116,25 @@ public class Controlador {
 
 
     // ============================================================
+    // CUENTAS COMPARTIDAS (utilidades)
+    // ============================================================
+
+    private List<UUID> cuentasCompartidasDelUsuarioActual() {
+
+        if (usuarioActual == null) {
+            throw new IllegalStateException("No hay usuario autenticado.");
+        }
+
+        return servicioCuentas.listar().stream()
+                .filter(c -> c.getParticipantes() != null)
+                .filter(c -> c.getParticipantes().stream()
+                        .anyMatch(p -> usuarioActual.getId().equals(p.getUsuarioId())))
+                .map(CuentaCompartida::getId)
+                .toList();
+    }
+
+
+// ============================================================
     // CATEGORÍAS
     // ============================================================
 
@@ -175,37 +195,57 @@ public class Controlador {
             final UUID cuentaCompartidaId,
             final String nota) {
 
-    	if (usuarioActual == null) {
-    		throw new IllegalStateException("No hay usuario autenticado.");
-    	}
-
-    	Gasto g = new Gasto(cantidad, fecha, categoriaId, nota);
-    	g.setUsuarioId(usuarioActual.getId());
-    	g.setCuentaCompartidaId(cuentaCompartidaId);
-
-    	servicioGastos.registrar(g);
-
-    	servicioCuentas.registrarGastoEnCuenta(
-    			cuentaCompartidaId,
-    			usuarioActual.getId(),
-    			cantidad
-    			);
-
-    	List<Gasto> historico = servicioGastos.listar()
-    			.stream()
-    			.filter(x -> x.getUsuarioId() != null)
-    			.filter(x -> x.getUsuarioId().equals(usuarioActual.getId()))
-    			.collect(java.util.stream.Collectors.toList());
-
-    	List<String> mensajes = gestorAlertas.evaluar(g, historico);
-
-    	// Persistir notificaciones en historial
-    	for (String msg : mensajes) {
-    		repoNotificaciones.save(new gestiongastos.dominio.Notificacion(usuarioActual.getId(), msg));
-    	}
-
-    	return mensajes;
+    // Compatibilidad: si no se indica pagador, asumimos que paga el usuario autenticado
+    if (usuarioActual == null) {
+        throw new IllegalStateException("No hay usuario autenticado.");
     }
+
+    return registrarGastoCompartido(cantidad, fecha, categoriaId, cuentaCompartidaId, usuarioActual.getId(), nota);
+}
+
+
+// Nueva versión: permite indicar explícitamente quién ha pagado dentro de la cuenta
+public List<String> registrarGastoCompartido(final BigDecimal cantidad,
+            final LocalDate fecha,
+            final UUID categoriaId,
+            final UUID cuentaCompartidaId,
+            final UUID usuarioIdPagador,
+            final String nota) {
+
+    if (usuarioActual == null) {
+        throw new IllegalStateException("No hay usuario autenticado.");
+    }
+
+    Gasto g = new Gasto(cantidad, fecha, categoriaId, nota);
+
+    // Importante: en gasto compartido, el usuarioId representa QUIÉN HA PAGADO
+    g.setUsuarioId(usuarioIdPagador);
+    g.setCuentaCompartidaId(cuentaCompartidaId);
+
+    servicioGastos.registrar(g);
+
+    // Actualizar saldos en la cuenta compartida
+    servicioCuentas.registrarGastoEnCuenta(
+            cuentaCompartidaId,
+            usuarioIdPagador,
+            cantidad
+    );
+
+    // Alertas y notificaciones se evalúan para el usuario autenticado (quien está usando la app)
+    List<Gasto> historico = servicioGastos.listar()
+            .stream()
+            .filter(x -> x.getUsuarioId() != null)
+            .filter(x -> x.getUsuarioId().equals(usuarioActual.getId()))
+            .collect(java.util.stream.Collectors.toList());
+
+    List<String> mensajes = gestorAlertas.evaluar(g, historico);
+
+    for (String msg : mensajes) {
+        repoNotificaciones.save(new gestiongastos.dominio.Notificacion(usuarioActual.getId(), msg));
+    }
+
+    return mensajes;
+}
 
 
 
@@ -216,20 +256,58 @@ public class Controlador {
             throw new IllegalStateException("No hay usuario autenticado.");
         }
 
+        // 1) Gastos personales: solo los del usuario autenticado
+        // 2) Gastos compartidos: todos los de las cuentas en las que participa
+        List<UUID> cuentas = cuentasCompartidasDelUsuarioActual();
+
         return servicioGastos.listar()
                 .stream()
-                .filter(g -> g.getUsuarioId() != null)
-                .filter(g -> g.getUsuarioId().equals(usuarioActual.getId()))
-                .collect(java.util.stream.Collectors.toList());
+                .filter(g -> {
+                    if (g.getCuentaCompartidaId() == null) {
+                        return g.getUsuarioId() != null && g.getUsuarioId().equals(usuarioActual.getId());
+                    }
+                    return cuentas.contains(g.getCuentaCompartidaId());
+                })
+                .toList();
     }
 
 
     public void actualizarGasto(UUID id, BigDecimal nuevaCantidad, LocalDate nuevaFecha, UUID nuevaCategoriaId, String nuevaNota) {
+
+        // Necesitamos saber si era un gasto compartido para recalcular saldos
+        UUID cuentaIdAntes = servicioGastos.listar().stream()
+                .filter(g -> g.getId().equals(id))
+                .findFirst()
+                .map(Gasto::getCuentaCompartidaId)
+                .orElse(null);
+
         servicioGastos.actualizar(id, nuevaCantidad, nuevaFecha, nuevaCategoriaId, nuevaNota);
+
+        // Si es compartido, recalculamos saldos desde cero para evitar inconsistencias
+        if (cuentaIdAntes != null) {
+            var gastosCuenta = servicioGastos.listar().stream()
+                    .filter(g -> cuentaIdAntes.equals(g.getCuentaCompartidaId()))
+                    .toList();
+            servicioCuentas.recalcularSaldos(cuentaIdAntes, gastosCuenta);
+        }
     }
 
     public void borrarGasto(UUID id) {
+
+        UUID cuentaIdAntes = servicioGastos.listar().stream()
+                .filter(g -> g.getId().equals(id))
+                .findFirst()
+                .map(Gasto::getCuentaCompartidaId)
+                .orElse(null);
+
         servicioGastos.borrar(id);
+
+        if (cuentaIdAntes != null) {
+            var gastosCuenta = servicioGastos.listar().stream()
+                    .filter(g -> cuentaIdAntes.equals(g.getCuentaCompartidaId()))
+                    .toList();
+            servicioCuentas.recalcularSaldos(cuentaIdAntes, gastosCuenta);
+        }
     }
 
     // ============================================================
@@ -237,8 +315,20 @@ public class Controlador {
     // ============================================================
 
     public List<Gasto> filtrarGastos(LocalDate d1, LocalDate d2, UUID catId) {
+
+        if (usuarioActual == null) {
+            throw new IllegalStateException("No hay usuario autenticado.");
+        }
+
+        List<UUID> cuentas = cuentasCompartidasDelUsuarioActual();
+
         return servicioGastos.filtrar(d1, d2, catId).stream()
-                .filter(g -> g.getUsuarioId().equals(usuarioActual.getId()))
+                .filter(g -> {
+                    if (g.getCuentaCompartidaId() == null) {
+                        return g.getUsuarioId() != null && g.getUsuarioId().equals(usuarioActual.getId());
+                    }
+                    return cuentas.contains(g.getCuentaCompartidaId());
+                })
                 .toList();
     }
 

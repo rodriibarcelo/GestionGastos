@@ -4,6 +4,7 @@ import gestiongastos.controlador.Controlador;
 import gestiongastos.dominio.Categoria;
 import gestiongastos.dominio.CuentaCompartida;
 import gestiongastos.dominio.Gasto;
+import gestiongastos.dominio.Usuario;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,8 +23,10 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 public class VistaMain {
 
@@ -35,15 +38,21 @@ public class VistaMain {
     private final DatePicker dpFecha;
     private final ComboBox<Categoria> cbCategoria;
     private final ComboBox<Object> cbCuenta;
+    private final ComboBox<Usuario> cbPagador; // NUEVO: quién ha pagado (solo en cuenta compartida)
     private final TextField tfNota;
     private final Button btnAdd;
     private final Button btnFiltrar;
     private final Button btnEdit;
     private final Button btnDelete;
 
-    // Tabla
+    // Tabla gastos
     private final TableView<GastoRow> table;
     private final ObservableList<GastoRow> rows;
+
+    // Tabla saldos (solo cuenta compartida)
+    private final TableView<SaldoRow> tableSaldos;
+    private final ObservableList<SaldoRow> saldoRows;
+    private final TitledPane paneSaldos;
 
     // Estado inferior
     private final Label lblTotal;
@@ -81,7 +90,8 @@ public class VistaMain {
         Menu menuVer = new Menu("Ver");
         MenuItem miEstadisticas = new MenuItem("Estadísticas…");
         MenuItem miCalendario = new MenuItem("Calendario de gastos…");
-        menuVer.getItems().addAll(miEstadisticas, miCalendario);
+        MenuItem miNotificaciones = new MenuItem("Notificaciones…"); // NUEVO
+        menuVer.getItems().addAll(miEstadisticas, miCalendario, miNotificaciones);
 
         bar.getMenus().addAll(menuDatos, menuVer);
 
@@ -154,6 +164,22 @@ public class VistaMain {
         // cargar opciones ("Personal" + cuentas compartidas)
         actualizarComboCuentas();
 
+        // NUEVO: Combo pagador (solo si la cuenta es compartida)
+        cbPagador = new ComboBox<>();
+        cbPagador.setMaxWidth(Double.MAX_VALUE);
+        cbPagador.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Usuario u) {
+                return u == null ? "" : u.getNombreUsuario();
+            }
+
+            @Override
+            public Usuario fromString(String s) {
+                return null;
+            }
+        });
+        cbPagador.setDisable(true);
+
         tfNota = new TextField();
         tfNota.setPromptText("Descripción opcional…");
 
@@ -175,6 +201,8 @@ public class VistaMain {
         r++;
         form.add(new Label("Cuenta:"), 0, r);
         form.add(cbCuenta, 1, r);
+        form.add(new Label("Pagado por:"), 2, r);       // NUEVO
+        form.add(cbPagador, 3, r);                      // NUEVO
 
         r++;
         form.add(new Label("Categoría:"), 0, r);
@@ -183,18 +211,17 @@ public class VistaMain {
         form.add(tfNota, 3, r);
 
         // ============================================================
-        // TABLA
+        // TABLA (GASTOS)
         // ============================================================
         table = new TableView<>();
         rows = FXCollections.observableArrayList();
         table.setItems(rows);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
-
         TableColumn<GastoRow, String> cCuenta = new TableColumn<>("Cuenta");
         cCuenta.setCellValueFactory(new PropertyValueFactory<>("cuenta"));
         cCuenta.setMinWidth(140);
-        
+
         TableColumn<GastoRow, LocalDate> cFecha = new TableColumn<>("Fecha");
         cFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
         cFecha.setMinWidth(110);
@@ -205,8 +232,6 @@ public class VistaMain {
                 setText(empty || item == null ? null : DF.format(item));
             }
         });
-
-
 
         TableColumn<GastoRow, String> cCat = new TableColumn<>("Categoría");
         cCat.setCellValueFactory(new PropertyValueFactory<>("categoria"));
@@ -228,8 +253,13 @@ public class VistaMain {
         cNota.setCellValueFactory(new PropertyValueFactory<>("nota"));
         cNota.setMinWidth(180);
 
-        // añadimos la columna Cuenta en la tabla
-        table.getColumns().setAll(cCuenta,cFecha, cCat, cCant, cNota);
+        // NUEVO: Pagado por
+        TableColumn<GastoRow, String> cPagador = new TableColumn<>("Pagado por");
+        cPagador.setCellValueFactory(new PropertyValueFactory<>("pagadoPor"));
+        cPagador.setMinWidth(140);
+
+        // añadimos columnas
+        table.getColumns().setAll(cCuenta, cFecha, cCat, cCant, cNota, cPagador);
 
         // Menú contextual
         MenuItem miEditCtx = new MenuItem("Editar");
@@ -238,7 +268,47 @@ public class VistaMain {
         miDeleteCtx.setOnAction(e -> onDelete());
         table.setContextMenu(new ContextMenu(miEditCtx, miDeleteCtx));
 
-        VBox center = new VBox(10, form, table);
+        // ============================================================
+        // TABLA (SALDOS) - solo cuenta compartida
+        // ============================================================
+        tableSaldos = new TableView<>();
+        saldoRows = FXCollections.observableArrayList();
+        tableSaldos.setItems(saldoRows);
+        tableSaldos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        tableSaldos.setFixedCellSize(28);
+        tableSaldos.setMinHeight(120);
+        tableSaldos.setPrefHeight(140);
+        VBox.setVgrow(tableSaldos, Priority.ALWAYS);
+
+
+        TableColumn<SaldoRow, String> sNombre = new TableColumn<>("Participante");
+        sNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        sNombre.setMinWidth(200);
+
+        TableColumn<SaldoRow, Double> sPct = new TableColumn<>("%" );
+        sPct.setCellValueFactory(new PropertyValueFactory<>("porcentaje"));
+        sPct.setMinWidth(70);
+
+        TableColumn<SaldoRow, BigDecimal> sSaldo = new TableColumn<>("Saldo" );
+        sSaldo.setCellValueFactory(new PropertyValueFactory<>("saldo"));
+        sSaldo.setMinWidth(120);
+        sSaldo.setStyle("-fx-alignment: CENTER-RIGHT;");
+        sSaldo.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(BigDecimal item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : MONEY.format(item));
+            }
+        });
+
+        tableSaldos.getColumns().setAll(sNombre, sPct, sSaldo);
+
+        paneSaldos = new TitledPane("Saldos de la cuenta", tableSaldos);
+        paneSaldos.setCollapsible(false);
+        paneSaldos.setVisible(false);
+        paneSaldos.setManaged(false);
+
+        VBox center = new VBox(10, form, paneSaldos, table);
         center.setPadding(new Insets(8, 8, 0, 8));
         VBox.setVgrow(table, Priority.ALWAYS);
         root.setCenter(center);
@@ -263,7 +333,8 @@ public class VistaMain {
         // ============================================================
         // DATOS INICIALES
         // ============================================================
-        cargarTabla(ctrl.listarGastos());
+        actualizarPanelCuentaSeleccionada();
+        refrescarTablaSegunCuentaSeleccionada(ctrl.listarGastos());
 
         // ============================================================
         // LISTENERS
@@ -273,6 +344,21 @@ public class VistaMain {
         btnEdit.setOnAction(e -> onEdit());
         btnDelete.setOnAction(e -> onDelete());
         miCategorias.setOnAction(e -> onOpenCategorias());
+
+        miAlertas.setOnAction(e -> {
+            VistaAlertas va = new VistaAlertas();
+            Utils.openDialog(root, "Configurar alertas", va.getRoot(), 420, 280);
+        });
+        
+        miImportar.setOnAction(e -> {
+            VistaImportarGastos vn = new VistaImportarGastos();
+            Utils.openDialog(root, "Importar gastos", vn.getRoot(), 680, 420);
+        });
+        
+        miNotificaciones.setOnAction(e -> {
+            VistaNotificaciones vn = new VistaNotificaciones();
+            Utils.openDialog(root, "Notificaciones", vn.getRoot(), 680, 420);
+        });
 
         miEstadisticas.setOnAction(e -> {
             VistaEstadisticas est = new VistaEstadisticas();
@@ -288,6 +374,14 @@ public class VistaMain {
             VistaCuentasCompartidas vc = new VistaCuentasCompartidas();
             Utils.openDialog(root, "Cuentas compartidas", vc.getRoot(), 600, 500);
             actualizarComboCuentas(); // refresca el combo de la pantalla principal
+            actualizarPanelCuentaSeleccionada();
+            refrescarTablaSegunCuentaSeleccionada(ctrl.listarGastos());
+        });
+
+        // cuando cambia la cuenta seleccionada, actualizamos pagadores + saldos + tabla
+        cbCuenta.valueProperty().addListener((obs, oldV, newV) -> {
+            actualizarPanelCuentaSeleccionada();
+            refrescarTablaSegunCuentaSeleccionada(ctrl.listarGastos());
         });
 
         btnEdit.disableProperty().bind(Bindings.isNull(table.getSelectionModel().selectedItemProperty()));
@@ -321,8 +415,13 @@ public class VistaMain {
 
             Object seleccionCuenta = cbCuenta.getValue();
             List<String> mensajes;
+            
+            if ("Todas".equals(seleccionCuenta)) {
+                throw new IllegalArgumentException("Selecciona una cuenta concreta para añadir un gasto.");
+            }
 
-            if ("Personal".equals(seleccionCuenta)) {
+
+            else if ("Personal".equals(seleccionCuenta)) {
 
                 mensajes = ctrl.registrarGasto(
                         cantidad,
@@ -333,11 +432,17 @@ public class VistaMain {
 
             } else if (seleccionCuenta instanceof CuentaCompartida cuenta) {
 
+                Usuario pagador = cbPagador.getValue();
+                if (pagador == null) {
+                    throw new IllegalArgumentException("Selecciona quién ha pagado el gasto.");
+                }
+
                 mensajes = ctrl.registrarGastoCompartido(
                         cantidad,
                         fecha,
                         cat.getId(),
                         cuenta.getId(),
+                        pagador.getId(),
                         nota
                 );
 
@@ -345,7 +450,8 @@ public class VistaMain {
                 throw new IllegalStateException("Cuenta seleccionada inválida.");
             }
 
-            cargarTabla(ctrl.listarGastos());
+            actualizarPanelCuentaSeleccionada();
+            refrescarTablaSegunCuentaSeleccionada(ctrl.listarGastos());
 
             if (!mensajes.isEmpty()) {
                 Utils.alertWarn(String.join("\n", mensajes));
@@ -435,7 +541,8 @@ public class VistaMain {
 
             ctrl.actualizarGasto(sel.getOriginal().getId(), nuevaCantidad, nuevaFecha, nuevaCat.getId(), nuevaNota);
 
-            cargarTabla(ctrl.listarGastos());
+            actualizarPanelCuentaSeleccionada();
+            refrescarTablaSegunCuentaSeleccionada(ctrl.listarGastos());
         } catch (Exception ex) {
             Utils.alertError("No se pudo actualizar: " + ex.getMessage());
         }
@@ -458,7 +565,8 @@ public class VistaMain {
             if (bt == ButtonType.YES) {
                 try {
                     ctrl.borrarGasto(sel.getOriginal().getId());
-                    cargarTabla(ctrl.listarGastos());
+                    actualizarPanelCuentaSeleccionada();
+                    refrescarTablaSegunCuentaSeleccionada(ctrl.listarGastos());
                 } catch (Exception ex) {
                     Utils.alertError("No se pudo eliminar: " + ex.getMessage());
                 }
@@ -472,16 +580,58 @@ public class VistaMain {
 
         if (dlg.isOk()) {
             var c = dlg.getCriterios();
-            cargarTabla(ctrl.filtrarGastos(c.getDesde(), c.getHasta(), c.getCategoriaId()));
+            actualizarPanelCuentaSeleccionada();
+            refrescarTablaSegunCuentaSeleccionada(
+                    ctrl.filtrarGastos(c.getDesde(), c.getHasta(), c.getCategoriaId())
+            );
         }
     }
+
+    /**
+     * Refresca la tabla de gastos usando la lista base recibida, pero aplicando
+     * el filtro implícito de la cuenta seleccionada en el combo "Cuenta".
+     *
+     * - Si la cuenta es "Personal": muestra solo gastos personales.
+     * - Si es una CuentaCompartida: muestra solo gastos de esa cuenta.
+     */
+	private void refrescarTablaSegunCuentaSeleccionada(List<Gasto> base) {
+	    if (base == null) {
+	        cargarTabla(List.of());
+	        return;
+	    }
+	
+	    Object sel = cbCuenta.getValue();
+	
+	    List<Gasto> filtrados;
+	
+	    if ("Todas".equals(sel)) {
+	        filtrados = base; // TODO
+	    }
+	    else if ("Personal".equals(sel)) {
+	        filtrados = base.stream()
+	                .filter(g -> g.getCuentaCompartidaId() == null)
+	                .toList();
+	    }
+	    else if (sel instanceof CuentaCompartida c) {
+	        filtrados = base.stream()
+	                .filter(g -> c.getId().equals(g.getCuentaCompartidaId()))
+	                .toList();
+	    }
+	    else {
+	        filtrados = base;
+	    }
+	
+	    cargarTabla(filtrados);
+	}
+
 
     private void onOpenCategorias() {
         VistaCategorias dlg = new VistaCategorias();
         Utils.openDialog(root, "Categorías", dlg.getRoot(), 520, 420);
 
         cbCategoria.getItems().setAll(ctrl.listarCategorias());
-        cargarTabla(ctrl.listarGastos());
+        actualizarPanelCuentaSeleccionada();
+        refrescarTablaSegunCuentaSeleccionada(ctrl.listarGastos());
     }
 
     private void cargarTabla(List<Gasto> gastos) {
@@ -491,9 +641,11 @@ public class VistaMain {
                                 g,
                                 g.getFecha(),
                                 nombreCategoria(g.getCategoriaId()),
-                                nombreCuenta(g),           // CUENTA
+                                nombreCuenta(g),
                                 g.getCantidad(),
-                                g.getNota()))
+                                g.getNota(),
+                                nombreUsuario(g.getUsuarioId())
+                        ))
                         .toList()
         );
 
@@ -504,7 +656,7 @@ public class VistaMain {
         lblTotal.setText("Total: " + MONEY.format(total));
     }
 
-    private String nombreCategoria(java.util.UUID id) {
+    private String nombreCategoria(UUID id) {
         return ctrl.listarCategorias()
                 .stream()
                 .filter(c -> c.getId().equals(id))
@@ -513,10 +665,19 @@ public class VistaMain {
                 .orElse("");
     }
 
+    private String nombreUsuario(UUID usuarioId) {
+        if (usuarioId == null) return "";
+        return ctrl.listarUsuarios()
+                .stream()
+                .filter(u -> usuarioId.equals(u.getId()))
+                .findFirst()
+                .map(Usuario::getNombreUsuario)
+                .orElse("(desconocido)");
+    }
+
     // Devuelve el nombre de la cuenta a mostrar en la tabla
     private String nombreCuenta(Gasto g) {
-        // ⚠️ AJUSTA AQUÍ el getter según tu clase Gasto
-        var cuentaId = g.getCuentaCompartidaId(); // por ejemplo: getCuentaCompartidaId()
+        var cuentaId = g.getCuentaCompartidaId();
 
         if (cuentaId == null) {
             return "Personal";
@@ -547,18 +708,94 @@ public class VistaMain {
     private void actualizarComboCuentas() {
         cbCuenta.getItems().clear();
 
-        // opción por defecto
+        // NUEVO: opción global
+        cbCuenta.getItems().add("Todas");
+
+        // Cuenta personal
         cbCuenta.getItems().add("Personal");
 
-        // añadir todas las cuentas compartidas
-        ctrl.getServicioCuentas().listar()
+        // Cuentas compartidas donde participa el usuario actual
+        UUID uid = ctrl.getUsuarioActual() == null ? null : ctrl.getUsuarioActual().getId();
+        ctrl.getServicioCuentas().listar().stream()
+                .filter(c -> uid != null && c.getParticipantes() != null)
+                .filter(c -> c.getParticipantes().stream()
+                        .anyMatch(p -> uid.equals(p.getUsuarioId())))
                 .forEach(c -> cbCuenta.getItems().add(c));
 
-        cbCuenta.getSelectionModel().selectFirst();
+        // Selección inicial: Todas
+        cbCuenta.getSelectionModel().select("Todas");
+    }
+
+
+    // ============================================================
+    // NUEVO: Cuando seleccionas una cuenta compartida
+    // - Rellenamos "Pagado por" con participantes
+    // - Mostramos la tabla de saldos
+    // ============================================================
+    private void actualizarPanelCuentaSeleccionada() {
+
+        Object seleccionCuenta = cbCuenta.getValue();
+
+        if (!(seleccionCuenta instanceof CuentaCompartida cuenta)) {
+            cbPagador.getItems().clear();
+            cbPagador.setDisable(true);
+            paneSaldos.setVisible(false);
+            paneSaldos.setManaged(false);
+            saldoRows.clear();
+            return;
+        }
+
+        // Participantes -> usuarios
+        List<Usuario> usuarios = ctrl.listarUsuarios();
+
+        List<Usuario> participantes = cuenta.getParticipantes().stream()
+                .map(p -> usuarios.stream().filter(u -> u.getId().equals(p.getUsuarioId())).findFirst().orElse(null))
+                .filter(u -> u != null)
+                .toList();
+
+        cbPagador.getItems().setAll(participantes);
+        cbPagador.setDisable(participantes.isEmpty());
+
+        // Selección por defecto: usuario actual si está en la cuenta; si no, el primero
+        Usuario actual = ctrl.getUsuarioActual();
+        if (actual != null && participantes.stream().anyMatch(u -> u.getId().equals(actual.getId()))) {
+            cbPagador.getSelectionModel().select(
+                    participantes.stream().filter(u -> u.getId().equals(actual.getId())).findFirst().orElse(null)
+            );
+        } else {
+            cbPagador.getSelectionModel().selectFirst();
+        }
+
+        // Saldos
+        saldoRows.setAll(
+                cuenta.getParticipantes().stream()
+                        .map(p -> {
+                            String nombre = usuarios.stream()
+                                    .filter(u -> u.getId().equals(p.getUsuarioId()))
+                                    .map(Usuario::getNombreUsuario)
+                                    .findFirst()
+                                    .orElse("(desconocido)");
+
+                            BigDecimal saldo = p.getSaldo() == null ? BigDecimal.ZERO : p.getSaldo();
+                            return new SaldoRow(nombre, p.getPorcentaje(), saldo);
+                        })
+                        .sorted(Comparator.comparing(SaldoRow::getNombre))
+                        .toList()
+        );
+
+        // Ajuste visual: muestra hasta 5 participantes sin que quede un "hueco" raro
+        // (si hay más, aparecerá scroll).
+        int n = saldoRows.size();
+        int visibles = Math.min(n, 5);
+        double alto = tableSaldos.getFixedCellSize() * visibles + 30; // cabecera aprox
+        tableSaldos.setPrefHeight(Math.max(90, alto));
+
+        paneSaldos.setVisible(true);
+        paneSaldos.setManaged(true);
     }
 
     // ============================================================
-    // DTO FILA TABLA
+    // DTO FILA TABLA GASTOS
     // ============================================================
 
     public static class GastoRow {
@@ -566,22 +803,25 @@ public class VistaMain {
         private final Gasto original;
         private final LocalDate fecha;
         private final String categoria;
-        private final String cuenta;      // NUEVO
+        private final String cuenta;
         private final BigDecimal cantidad;
         private final String nota;
+        private final String pagadoPor; // NUEVO
 
         public GastoRow(Gasto original,
                         LocalDate fecha,
                         String categoria,
                         String cuenta,
                         BigDecimal cantidad,
-                        String nota) {
+                        String nota,
+                        String pagadoPor) {
             this.original = original;
             this.fecha = fecha;
             this.categoria = categoria;
             this.cuenta = cuenta;
             this.cantidad = cantidad;
             this.nota = nota;
+            this.pagadoPor = pagadoPor;
         }
 
         public Gasto getOriginal() {
@@ -606,6 +846,37 @@ public class VistaMain {
 
         public String getNota() {
             return nota;
+        }
+
+        public String getPagadoPor() {
+            return pagadoPor;
+        }
+    }
+
+    // ============================================================
+    // DTO FILA TABLA SALDOS
+    // ============================================================
+    public static class SaldoRow {
+        private final String nombre;
+        private final Double porcentaje;
+        private final BigDecimal saldo;
+
+        public SaldoRow(String nombre, Double porcentaje, BigDecimal saldo) {
+            this.nombre = nombre;
+            this.porcentaje = porcentaje;
+            this.saldo = saldo;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public Double getPorcentaje() {
+            return porcentaje;
+        }
+
+        public BigDecimal getSaldo() {
+            return saldo;
         }
     }
 }
