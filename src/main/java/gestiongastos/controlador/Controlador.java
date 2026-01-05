@@ -172,8 +172,7 @@ public class Controlador {
 
     	servicioGastos.registrar(g);
 
-    	List<Gasto> historico = servicioGastos.listar()
-    			.stream()
+    	List<Gasto> historico = servicioGastos.listar().stream()
     			.filter(x -> x.getUsuarioId() != null)
     			.filter(x -> x.getUsuarioId().equals(usuarioActual.getId()))
     			.collect(java.util.stream.Collectors.toList());
@@ -189,11 +188,8 @@ public class Controlador {
     }
 
 
-    public List<String> registrarGastoCompartido(final BigDecimal cantidad,
-            final LocalDate fecha,
-            final UUID categoriaId,
-            final UUID cuentaCompartidaId,
-            final String nota) {
+    public List<String> registrarGastoCompartido(final BigDecimal cantidad, final LocalDate fecha, final UUID categoriaId,
+    		final UUID cuentaCompartidaId, final String nota) {
 
     // Compatibilidad: si no se indica pagador, asumimos que paga el usuario autenticado
     if (usuarioActual == null) {
@@ -204,13 +200,9 @@ public class Controlador {
 }
 
 
-// Nueva versión: permite indicar explícitamente quién ha pagado dentro de la cuenta
-public List<String> registrarGastoCompartido(final BigDecimal cantidad,
-            final LocalDate fecha,
-            final UUID categoriaId,
-            final UUID cuentaCompartidaId,
-            final UUID usuarioIdPagador,
-            final String nota) {
+//permite indicar explícitamente quién ha pagado dentro de la cuenta
+public List<String> registrarGastoCompartido(final BigDecimal cantidad, final LocalDate fecha,final UUID categoriaId,
+            final UUID cuentaCompartidaId, final UUID usuarioIdPagador, final String nota) {
 
     if (usuarioActual == null) {
         throw new IllegalStateException("No hay usuario autenticado.");
@@ -218,27 +210,22 @@ public List<String> registrarGastoCompartido(final BigDecimal cantidad,
 
     Gasto g = new Gasto(cantidad, fecha, categoriaId, nota);
 
-    // Importante: en gasto compartido, el usuarioId representa QUIÉN HA PAGADO
+    //en gasto compartido, el usuarioId representa QUIÉN HA PAGADO
     g.setUsuarioId(usuarioIdPagador);
     g.setCuentaCompartidaId(cuentaCompartidaId);
 
     servicioGastos.registrar(g);
 
     // Actualizar saldos en la cuenta compartida
-    servicioCuentas.registrarGastoEnCuenta(
-            cuentaCompartidaId,
-            usuarioIdPagador,
-            cantidad
-    );
+    servicioCuentas.registrarGastoEnCuenta(cuentaCompartidaId, usuarioIdPagador, cantidad);
 
-    // Alertas y notificaciones se evalúan para el usuario autenticado (quien está usando la app)
-    List<Gasto> historico = servicioGastos.listar()
-            .stream()
+    // Alertas y notificaciones se evalúan para el usuario autenticado(el que esta usando la app)
+    List<Gasto> hist = servicioGastos.listar().stream()
             .filter(x -> x.getUsuarioId() != null)
             .filter(x -> x.getUsuarioId().equals(usuarioActual.getId()))
             .collect(java.util.stream.Collectors.toList());
 
-    List<String> mensajes = gestorAlertas.evaluar(g, historico);
+    List<String> mensajes = gestorAlertas.evaluar(g, hist);
 
     for (String msg : mensajes) {
         repoNotificaciones.save(new gestiongastos.dominio.Notificacion(usuarioActual.getId(), msg));
@@ -246,8 +233,6 @@ public List<String> registrarGastoCompartido(final BigDecimal cantidad,
 
     return mensajes;
 }
-
-
 
 
     public List<Gasto> listarGastos() {
@@ -260,8 +245,7 @@ public List<String> registrarGastoCompartido(final BigDecimal cantidad,
         // 2) Gastos compartidos: todos los de las cuentas en las que participa
         List<UUID> cuentas = cuentasCompartidasDelUsuarioActual();
 
-        return servicioGastos.listar()
-                .stream()
+        return servicioGastos.listar().stream()
                 .filter(g -> {
                     if (g.getCuentaCompartidaId() == null) {
                         return g.getUsuarioId() != null && g.getUsuarioId().equals(usuarioActual.getId());
@@ -283,7 +267,7 @@ public List<String> registrarGastoCompartido(final BigDecimal cantidad,
 
         servicioGastos.actualizar(id, nuevaCantidad, nuevaFecha, nuevaCategoriaId, nuevaNota);
 
-        // Si es compartido, recalculamos saldos desde cero para evitar inconsistencias
+        // Si es compartido, recalculamos saldos desde cero 
         if (cuentaIdAntes != null) {
             var gastosCuenta = servicioGastos.listar().stream()
                     .filter(g -> cuentaIdAntes.equals(g.getCuentaCompartidaId()))

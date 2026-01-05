@@ -11,7 +11,7 @@ public class GestionGastosApp extends Application {
 
     @Override
     public void start(final Stage primaryStage) {
-        // Inicializa datos / singleton
+        // singleton
         Controlador.getInstance();
 
         VistaLogin login = new VistaLogin();

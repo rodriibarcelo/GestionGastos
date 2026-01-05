@@ -54,7 +54,7 @@ public class ServicioCuentasCompartidas {
                 .mapToDouble(Participacion::getPorcentaje)
                 .sum();
 
-        if (Math.abs(suma - 100.0) > 0.01) {  // pequeña tolerancia por decimales
+        if (Math.abs(suma - 100.0) > 0.01) {  
             throw new IllegalArgumentException(
                     "La suma de los porcentajes de la cuenta debe ser 100% (ahora es " + suma + "%)"
             );
@@ -71,7 +71,7 @@ public class ServicioCuentasCompartidas {
 
 
     public void deleteById(UUID id) {
-        repo.deleteById(id); // 🔥 CORRECTO → deleteById NO existe en el repo
+        repo.deleteById(id); 
     }
 
     public void actualizarCuenta(UUID id, String nuevoNombre, List<Participacion> nuevasParticipaciones) {
@@ -111,7 +111,7 @@ public class ServicioCuentasCompartidas {
             }
         }
 
-        // 2) Aplicar todos los gastos en orden (por fecha) para recomputar el estado
+        // 2) Aplicar todos los gastos por fecha
         if (gastosCuenta != null) {
             gastosCuenta.stream()
                     .filter(g -> g.getCuentaCompartidaId() != null)

@@ -6,9 +6,11 @@ import java.util.UUID;
 public class Categoria {
     private UUID id;
     private String nombre;
-    private String colorHex; // opcional (ej. "#33AA77")
+    private String colorHex; // opcional 
 
-    public Categoria() { /* Jackson */ }
+    public Categoria() { 
+    	//json
+    }
 
     public Categoria(String nombre, String colorHex) {
         this.id = UUID.randomUUID();

@@ -30,15 +30,11 @@ public class VistaCuentaForm {
     public VistaCuentaForm(CuentaCompartida original) {
         root = new BorderPane();
         root.setPadding(new Insets(16));
-
-        // ------------------------------------------
-        // CONTENEDOR CENTRAL (nombre + lista usuarios)
-        // ------------------------------------------
+        
         VBox contenido = new VBox(10);
         contenido.setPadding(new Insets(0));
         root.setCenter(contenido);
 
-        // --- Fila nombre de la cuenta ---
         HBox filaNombre = new HBox(8);
         filaNombre.setAlignment(Pos.CENTER_LEFT);
 
@@ -54,9 +50,7 @@ public class VistaCuentaForm {
         filaNombre.getChildren().addAll(lblNombre, tfNombre);
         contenido.getChildren().add(filaNombre);
 
-        // ------------------------------------------
         // LISTA DE USUARIOS CON CHECK + PORCENTAJE
-        // ------------------------------------------
         listaUsuarios = new VBox(10);
         listaUsuarios.setPadding(new Insets(10));
 
@@ -68,9 +62,7 @@ public class VistaCuentaForm {
 
         contenido.getChildren().add(scroll);
 
-        // ------------------------------------------
         // BOTONES
-        // ------------------------------------------
         Button btnCancelar = new Button("Cancelar");
         btnCancelar.setCancelButton(true);
 
@@ -119,14 +111,11 @@ public class VistaCuentaForm {
         return list;
     }
 
-    // ============================================================
     // Construir lista de usuarios
-    // ============================================================
     private void construirListaUsuarios(CuentaCompartida original) {
 
         List<Usuario> usuarios = ctrl.listarUsuarios();
 
-        // Mapa para recuperar porcentaje si es edición
         Map<UUID, Double> porcentajesIniciales = new HashMap<>();
 
         if (original != null) {
@@ -149,10 +138,8 @@ public class VistaCuentaForm {
             tf.setPrefWidth(60);
             mapaPorcentajes.put(u.getId(), tf);
 
-            // Habilitar/deshabilitar campo % según el check
             tf.disableProperty().bind(chk.selectedProperty().not());
 
-            // Si estamos editando…
             if (porcentajesIniciales.containsKey(u.getId())) {
                 chk.setSelected(true);
                 tf.setText(String.valueOf(porcentajesIniciales.get(u.getId())));
@@ -166,9 +153,7 @@ public class VistaCuentaForm {
     }
 
 
-    // ============================================================
     // Aceptar formulario
-    // ============================================================
     private void onAceptar() {
 
         if (tfNombre.getText().trim().isBlank()) {
@@ -187,7 +172,6 @@ public class VistaCuentaForm {
                 String txt = mapaPorcentajes.get(entry.getKey())
                         .getText().trim();
 
-                // Si el campo está vacío, lo tratamos como 0 (reparto equitativo posible)
                 if (!txt.isBlank()) {
 
                     if (!txt.matches("\\d{1,3}([\\.,]\\d{1,2})?")) {
@@ -208,7 +192,6 @@ public class VistaCuentaForm {
         }
 
         // Si el usuario ha puesto porcentajes, la suma debe ser 100.
-        // Si los deja todos en blanco, el servicio hará reparto equitativo.
         if (algunoConPorcentaje && Math.abs(total - 100.0) > 0.01) {
             Utils.alertWarn("La suma total de porcentajes debe ser 100% (actualmente es " + total + ").");
             return;

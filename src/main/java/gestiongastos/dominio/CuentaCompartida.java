@@ -56,7 +56,6 @@ public class CuentaCompartida {
                     .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
 
             if (p.getUsuarioId().equals(usuarioIdPagador)) {
-                // Ha pagado TODO el gasto, pero solo le correspondía "parte"
                 // saldo += (importe - parte)
                 BigDecimal nuevoSaldo = p.getSaldo().add(importe.subtract(parte));
                 p.setSaldo(nuevoSaldo);

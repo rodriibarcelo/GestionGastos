@@ -17,7 +17,7 @@ public class AlertaImporteMayor implements AlertaStrategy {
     @Override
     public Optional<String> evaluar(Gasto nuevo, List<Gasto> historico) {
         if (nuevo.getCantidad().compareTo(limite) > 0) {
-            return Optional.of("⚠ El gasto (" + nuevo.getCantidad()
+            return Optional.of("El gasto (" + nuevo.getCantidad()
                     + "€) supera el límite de " + limite + "€");
         }
         return Optional.empty();

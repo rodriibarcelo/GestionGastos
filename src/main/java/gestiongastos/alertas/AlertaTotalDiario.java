@@ -27,7 +27,7 @@ public class AlertaTotalDiario implements AlertaStrategy {
                 .add(nuevo.getCantidad());
 
         if (acumulado.compareTo(limite) > 0) {
-            return Optional.of("⚠ El total de hoy (" + acumulado
+            return Optional.of("El total de hoy (" + acumulado
                     + "€) supera el límite de " + limite + "€");
         }
 

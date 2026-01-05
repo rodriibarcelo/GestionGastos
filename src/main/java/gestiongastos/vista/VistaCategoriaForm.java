@@ -14,7 +14,7 @@ public class VistaCategoriaForm {
     private final BorderPane root;
 
     private final TextField tfNombre;
-    private final TextField tfColor;   // se mantiene como texto #RRGGBB para el dominio
+    private final TextField tfColor;   
     private final ColorPicker cpColor;
 
     private boolean ok;
@@ -23,7 +23,6 @@ public class VistaCategoriaForm {
         root = new BorderPane();
         root.setPadding(new Insets(16));
 
-        // ------- Formulario centrado -------
         GridPane form = new GridPane();
         form.setHgap(10);
         form.setVgap(10);
@@ -41,7 +40,6 @@ public class VistaCategoriaForm {
 
         tfColor  = new TextField();
         tfColor.setPromptText("#RRGGBB");
-        // Valida mientras se escribe: permite vacío/partial y hasta 6 hex
         tfColor.setTextFormatter(new TextFormatter<>(ch -> {
             String nxt = ch.getControlNewText();
             return nxt.matches("#?[0-9a-fA-F]{0,6}") ? ch : null;
@@ -50,11 +48,10 @@ public class VistaCategoriaForm {
         cpColor = new ColorPicker();
         cpColor.setMaxWidth(Double.MAX_VALUE);
 
-        // Sincronización bidireccional simple (hex <-> picker)
         tfColor.textProperty().addListener((obs, oldV, newV) -> {
             if (newV == null || newV.isBlank()) return;
             String hex = normalizaHex(newV);
-            if (hex.length() == 7) { // #RRGGBB completo
+            if (hex.length() == 7) { 
                 try { cpColor.setValue(Color.web(hex)); } catch (IllegalArgumentException ignored) {}
             }
         });
@@ -68,7 +65,6 @@ public class VistaCategoriaForm {
 
         root.setCenter(form);
 
-        // ------- Botonera derecha -------
         Button btnCancelar = new Button("Cancelar");
         btnCancelar.setCancelButton(true);
         Button btnAceptar  = new Button("Aceptar");
@@ -81,14 +77,12 @@ public class VistaCategoriaForm {
         bottom.setPadding(new Insets(10, 0, 0, 0));
         root.setBottom(bottom);
 
-        // ------- Cargar original (si hay) -------
         if (original != null) {
             tfNombre.setText(original.getNombre());
             String hex = normalizaHex(original.getColorHex());
             tfColor.setText(hex);
             try { cpColor.setValue(Color.web(hex)); } catch (Exception ignored) {}
         } else {
-            // valor por defecto
             cpColor.setValue(Color.web("#4e8cff"));
             tfColor.setText("#4e8cff");
         }
@@ -105,7 +99,7 @@ public class VistaCategoriaForm {
                 Utils.alertWarn("Color no válido. Usa formato #RRGGBB.");
                 return;
             }
-            tfColor.setText(hex); // normalizado
+            tfColor.setText(hex); 
             ok = true;
             root.getScene().getWindow().hide();
         });
@@ -119,13 +113,12 @@ public class VistaCategoriaForm {
 
     public String getColorHex() { return normalizaHex(tfColor.getText()); }
 
-    // ------- Helpers -------
     private static String normalizaHex(String s) {
         if (s == null) return "";
         s = s.trim();
         if (s.isEmpty()) return "";
         if (!s.startsWith("#")) s = "#" + s;
-        if (s.length() == 4) { // #RGB -> #RRGGBB
+        if (s.length() == 4) { 
             char r = s.charAt(1), g = s.charAt(2), b = s.charAt(3);
             s = "#" + (""+r+r+g+g+b+b);
         }

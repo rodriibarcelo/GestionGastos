@@ -22,7 +22,6 @@ public class VistaImportarGastos {
     private final BorderPane root;
     private File archivoSeleccionado;
 
-    // refs UI (para habilitar/deshabilitar y actualizar texto)
     private final TextField tfArchivo;
     private final Button btnImportar;
 
@@ -33,7 +32,6 @@ public class VistaImportarGastos {
         root.setPrefSize(560, 280);
         root.setStyle("-fx-background-color: #f6f7fb;");
 
-        // ===== TOP: Título + subtítulo =====
         Label title = new Label("Importar gastos");
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: 700;");
 
@@ -44,7 +42,6 @@ public class VistaImportarGastos {
         top.setPadding(new Insets(6, 6, 12, 6));
         root.setTop(top);
 
-        // ===== CARD CENTRAL =====
         VBox card = new VBox(14);
         card.setPadding(new Insets(18));
         card.setMaxWidth(480);
@@ -56,7 +53,6 @@ public class VistaImportarGastos {
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 14, 0, 0, 4);"
         );
 
-        // Fila selector de archivo
         Label lblArchivo = new Label("Archivo CSV");
         lblArchivo.setStyle("-fx-font-weight: 600;");
 
@@ -100,7 +96,6 @@ public class VistaImportarGastos {
         HBox botones = new HBox(10, spacer, btnCerrar, btnImportar);
         botones.setAlignment(Pos.CENTER_RIGHT);
 
-        // Montaje card
         card.getChildren().addAll(
                 lblArchivo,
                 rowArchivo,
@@ -109,7 +104,6 @@ public class VistaImportarGastos {
                 botones
         );
 
-        // Centrar card
         StackPane center = new StackPane(card);
         center.setPadding(new Insets(10));
         root.setCenter(center);
@@ -130,7 +124,6 @@ public class VistaImportarGastos {
 
     private void onImportar() {
         if (archivoSeleccionado == null) {
-            // por si acaso
             Utils.alertWarn("Selecciona un archivo primero.");
             return;
         }

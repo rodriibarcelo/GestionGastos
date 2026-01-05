@@ -32,7 +32,6 @@ public class VistaCategorias {
     public VistaCategorias() {
         this.ctrl = Controlador.getInstance();
 
-        // --- Root ---
         this.root = new BorderPane();
         this.root.setPadding(new Insets(12));
         this.root.setPrefSize(560, 420);
@@ -60,7 +59,6 @@ public class VistaCategorias {
         cColorTexto.setCellValueFactory(new PropertyValueFactory<>("colorHex"));
         cColorTexto.setMinWidth(140);
 
-        // Columna con muestra de color
         TableColumn<Categoria, String> cColorSwatch = new TableColumn<>(" ");
         cColorSwatch.setMinWidth(60);
         cColorSwatch.setMaxWidth(70);
@@ -98,13 +96,11 @@ public class VistaCategorias {
         VBox.setVgrow(table, Priority.ALWAYS);
         root.setCenter(center);
 
-        // --- Botonera ---
         btnAdd = new Button("Añadir");
         btnEdit = new Button("Editar");
         btnDelete = new Button("Borrar");
         btnCerrar = new Button("Cerrar");
 
-        // Desactivar Editar/Borrar si no hay selección
         btnEdit.disableProperty().bind(Bindings.isNull(table.getSelectionModel().selectedItemProperty()));
         btnDelete.disableProperty().bind(Bindings.isNull(table.getSelectionModel().selectedItemProperty()));
 
@@ -115,13 +111,11 @@ public class VistaCategorias {
         bottom.setPadding(new Insets(10, 0, 0, 0));
         root.setBottom(bottom);
 
-        // --- Listeners ---
         btnCerrar.setOnAction(e -> root.getScene().getWindow().hide());
         btnAdd.setOnAction(e -> onAdd());
         btnEdit.setOnAction(e -> onEdit());
         btnDelete.setOnAction(e -> onDelete());
 
-        // Doble clic para editar
         table.setRowFactory(tv -> {
             TableRow<Categoria> row = new TableRow<>();
             row.setOnMouseClicked(evt -> {

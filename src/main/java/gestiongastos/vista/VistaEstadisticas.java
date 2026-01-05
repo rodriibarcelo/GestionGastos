@@ -96,7 +96,7 @@ public class VistaEstadisticas {
         return FXCollections.observableArrayList(rows);
     }
 
-    // ======= Tarta por categoría =======
+    //Tarta por categoría
     private Parent crearTartaPorCategoria() {
         List<Gasto> gastos = ctrl.listarGastos();
         Map<UUID, String> catNames = ctrl.listarCategorias().stream()
@@ -114,7 +114,6 @@ public class VistaEstadisticas {
         PieChart chart = new PieChart(data);
         chart.setTitle("Distribución por categoría");
 
-        // -> aplicar color por categoría (según Categoria.getColorHex)
         Map<String, String> colorByName = coloresPorNombre();
         for (PieChart.Data d : chart.getData()) {
             String hex = colorByName.getOrDefault(d.getName(), "#808080");
@@ -126,7 +125,7 @@ public class VistaEstadisticas {
         return wrap(chart);
     }
 
-    // ======= Barras por categoría =======
+    //Barras por categoría
     private Parent crearBarrasPorCategoria() {
         CategoryAxis x = new CategoryAxis();
         NumberAxis y = new NumberAxis();
@@ -152,7 +151,6 @@ public class VistaEstadisticas {
 
         chart.getData().add(serie);
 
-        // -> colorear cada barra según la categoría
         Map<String, String> colorByName = coloresPorNombre();
         for (XYChart.Data<String, Number> d : serie.getData()) {
             String hex = colorByName.getOrDefault(d.getXValue(), "#808080");
@@ -164,7 +162,6 @@ public class VistaEstadisticas {
         return wrap(chart);
     }
 
-    // ======= Línea: evolución mensual =======
     private Parent crearLineaMensual() {
         CategoryAxis x = new CategoryAxis();
         NumberAxis y = new NumberAxis();
@@ -188,9 +185,7 @@ public class VistaEstadisticas {
         return wrap(chart);
     }
 
-    // ======= helpers de color =======
     private Map<String, String> coloresPorNombre() {
-        // nombreCategoria -> hex normalizado
         return ctrl.listarCategorias().stream()
                 .collect(Collectors.toMap(
                         Categoria::getNombre,
@@ -219,7 +214,6 @@ public class VistaEstadisticas {
         return bp;
     }
 
-    // ======= DTO tabla resumen =======
     public static class RowResumen {
         private final String categoria;
         private final BigDecimal total;

@@ -48,10 +48,9 @@ public class VistaCalendario {
         StackPane contenedorVistas = new StackPane(dayView, monthView);
         monthView.setVisible(false);  // Por defecto mostramos el día
 
-        // --- Envolver en un Pane que bloquea TODA interacción ---
+        //Envolver en un Pane que bloquea TODA interacción
         StackPane bloqueador = new StackPane(contenedorVistas);
 
-        // Este filtro absorbe absolutamente todos los eventos del ratón
         bloqueador.addEventFilter(javafx.scene.input.MouseEvent.ANY, e -> e.consume());
         bloqueador.addEventFilter(javafx.scene.input.DragEvent.ANY, e -> e.consume());
 
@@ -59,11 +58,7 @@ public class VistaCalendario {
 
         root.setCenter(bloqueador);
 
-
-        /* -----------------------------
-           TOP: Selector de fecha y vista
-        ----------------------------- */
-
+        //selector de fecha y vista
         DatePicker selectorFecha = new DatePicker(LocalDate.now());
 
         ComboBox<String> selectorVista = new ComboBox<>();

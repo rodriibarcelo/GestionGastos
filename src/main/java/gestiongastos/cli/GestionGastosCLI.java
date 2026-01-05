@@ -58,7 +58,7 @@ public class GestionGastosCLI {
         System.out.print("Fecha (YYYY-MM-DD): ");
         LocalDate fecha = LocalDate.parse(sc.nextLine());
 
-        Categoria cat = ctrl.listarCategorias().get(0); // simplificado
+        Categoria cat = ctrl.listarCategorias().get(0); 
         System.out.print("Nota: ");
         String nota = sc.nextLine();
 
