@@ -11,7 +11,7 @@ import javafx.scene.text.Font;
 public class VistaLogin {
 
     private final BorderPane root;
-    private Runnable onLoginOk;   // callback para avisar al lanzador
+    private Runnable onLoginOk;   
 
     public VistaLogin() {
         root = new BorderPane();
@@ -48,7 +48,7 @@ public class VistaLogin {
         center.setPadding(new Insets(8, 16, 16, 16));
         root.setCenter(center);
 
-        // --- Botonera ---
+        // --- Botones ---
         Button btnCancelar = new Button("Cancelar");
         btnCancelar.setCancelButton(true);
 
