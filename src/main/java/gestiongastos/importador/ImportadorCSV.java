@@ -16,7 +16,7 @@ import java.util.List;
 public class ImportadorCSV implements ImportadorGastos {
 
     private static final DateTimeFormatter DF_DMY =
-            DateTimeFormatter.ofPattern("d/M/uuuu");   // 3/2/2022
+            DateTimeFormatter.ofPattern("d/M/uuuu");   
 
     @Override
     public List<Gasto> importar(final Path fichero) throws IOException {
@@ -25,8 +25,6 @@ public class ImportadorCSV implements ImportadorGastos {
 
         try (BufferedReader br = Files.newBufferedReader(fichero, StandardCharsets.UTF_8)) {
 
-            // Cabecera del fichero del profesor:
-            // Date,Account,Category,Subcategory,Note,Payer,Amount,Currency
             String header = br.readLine(); // la ignoramos
 
             String linea;
@@ -35,25 +33,21 @@ public class ImportadorCSV implements ImportadorGastos {
                     continue;
                 }
 
-                // Separador: coma
                 String[] c = linea.split(",", -1);
                 if (c.length < 7) {
-                    // línea mal formada: la ignoramos o lanzamos excepción
                     throw new IllegalArgumentException("Línea CSV inválida: " + linea);
                 }
 
-                // 0 = Date (puede tener hora)
+                
                 String rawFecha = c[0].trim();
                 LocalDate fecha = parseFecha(rawFecha);
 
-                // 2 = Category, 3 = Subcategory
                 String categoria = c[2].trim();
                 String subcategoria = c[3].trim();
 
-                // 4 = Note
                 String nota = c[4].trim();
 
-                // 6 = Amount (puede usar coma o punto decimal)
+                //(puede usar coma o punto)
                 String rawImporte = c[6].trim().replace(",", ".");
                 BigDecimal cantidad = new BigDecimal(rawImporte);
 
@@ -61,12 +55,7 @@ public class ImportadorCSV implements ImportadorGastos {
                     categoria = categoria + " / " + subcategoria;
                 }
 
-                Gasto g = new Gasto(
-                        cantidad,
-                        fecha,
-                        null,       // categoría se resuelve después
-                        nota
-                );
+                Gasto g = new Gasto(cantidad, fecha, null, nota);
                 g.setCategoriaNombreTemp(categoria);
 
                 lista.add(g);
@@ -76,11 +65,6 @@ public class ImportadorCSV implements ImportadorGastos {
         return lista;
     }
 
-    /**
-     * Intenta parsear fechas en:
-     * - ISO:    2024-10-28
-     * - d/M/yy: 3/2/2022  (ignorando la hora si la hay)
-     */
     private LocalDate parseFecha(final String raw) {
 
         // Quitar la hora si existe

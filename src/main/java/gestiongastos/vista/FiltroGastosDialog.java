@@ -56,7 +56,7 @@ public class FiltroGastosDialog {
         dpDesde = new DatePicker();
         dpHasta = new DatePicker();
 
-        // Conversor dd/MM/yyyy
+        
         dpDesde.setConverter(new StringConverter<>() {
             @Override public String toString(LocalDate d) { return d == null ? "" : DF.format(d); }
             @Override public LocalDate fromString(String s) { return (s == null || s.isBlank()) ? null : LocalDate.parse(s, DF); }
@@ -72,7 +72,6 @@ public class FiltroGastosDialog {
         List<Categoria> cats = Controlador.getInstance().listarCategorias();
         cbCategoria.getItems().addAll(cats);
         cbCategoria.getSelectionModel().selectFirst();
-        // Render bonito: "Todas" o nombre de la categoría
         cbCategoria.setCellFactory(list -> new ListCell<>() {
             @Override protected void updateItem(Object item, boolean empty) {
                 super.updateItem(item, empty);
@@ -96,7 +95,7 @@ public class FiltroGastosDialog {
 
         root.setCenter(form);
 
-        // --- Botonera derecha ---
+        // Botones derecha
         Button btnCancelar = new Button("Cancelar");
         btnCancelar.setCancelButton(true);
         Button btnAplicar  = new Button("Aplicar");

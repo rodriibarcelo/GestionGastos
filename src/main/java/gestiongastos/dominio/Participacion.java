@@ -7,7 +7,7 @@ public class Participacion {
 
     private UUID usuarioId;
     private UUID cuentaId;
-    private double porcentaje; // 0–100
+    private double porcentaje; 
     private BigDecimal saldo = BigDecimal.ZERO;
 
 
