@@ -48,9 +48,9 @@ Los datos se guardan en la carpeta `data/` en ficheros JSON.
 
 La memoria del proyecto está en [`docs/`](./docs/):
 
-- `docs/modelo.md` — diagrama de clases del dominio
-- `docs/historias_usuario.md` — historias de usuario
-- `docs/diagrama_interaccion.md` — diagrama de interacción (una HU)
-- `docs/arquitectura.md` — arquitectura y decisiones de diseño
-- `docs/patrones.md` — patrones de diseño
-- `docs/manual_usuario.md` — manual de usuario (con capturas)
+- `docs/1.modelo.md` — diagrama de clases del dominio
+- `docs/2.historias_usuario.md` — historias de usuario
+- `docs/3.diagrama_interaccion.md` — diagrama de interacción (una HU)
+- `docs/4.arquitectura.md` — arquitectura y decisiones de diseño
+- `docs/5.patrones.md` — patrones de diseño
+- `docs/6.manual_usuario.md` — manual de usuario (con capturas)
