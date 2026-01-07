@@ -679,16 +679,6 @@
   "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
   "categoriaNombreTemp" : null
 }, {
-  "id" : "1dc9a7c0-4d2a-42f6-bbe2-1ce4779acd75",
-  "cantidad" : 200,
-  "fecha" : [ 2025, 12, 31 ],
-  "categoriaId" : "450d732d-b5b3-49ca-bf43-56724ba36acb",
-  "nota" : "no se",
-  "cuentaCompartidaId" : "1107353b-175e-40ce-b811-cb3ae282d9c8",
-  "personaId" : null,
-  "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
-  "categoriaNombreTemp" : null
-}, {
   "id" : "b6c887d6-1a10-48b4-a677-cf96321e6e5f",
   "cantidad" : 22,
   "fecha" : [ 2025, 12, 31 ],

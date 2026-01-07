@@ -19,16 +19,16 @@
     "usuarioId" : "c8305698-ee59-4fd5-98c3-9c0edcdc2f27",
     "cuentaId" : null,
     "porcentaje" : 33.33,
-    "saldo" : 192.69
+    "saldo" : 59.35
   }, {
     "usuarioId" : "8658ea32-6e4f-4769-916c-93dfffcfe5a7",
     "cuentaId" : null,
     "porcentaje" : 33.33,
-    "saldo" : -85.31
+    "saldo" : -18.65
   }, {
     "usuarioId" : "69a3b403-7d8b-4baa-9a3a-a0a517d54d37",
     "cuentaId" : null,
     "porcentaje" : 33.34,
-    "saldo" : -107.37
+    "saldo" : -40.69
   } ]
 } ]

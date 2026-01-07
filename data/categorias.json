@@ -17,35 +17,35 @@
 }, {
   "id" : "391d0319-470c-42b3-9927-5186d9b0fbed",
   "nombre" : "efectivo / Transporte Público",
-  "colorHex" : "#888888"
+  "colorHex" : "#800000"
 }, {
   "id" : "ba6bfca8-6808-4c55-b599-89d4c6fb828a",
   "nombre" : "on line / Ocio",
-  "colorHex" : "#888888"
+  "colorHex" : "#808000"
 }, {
   "id" : "f85aa910-d77b-4a80-a82a-b4e4b418887d",
   "nombre" : "con tarjeta / Gasolina",
-  "colorHex" : "#888888"
+  "colorHex" : "#ffff00"
 }, {
   "id" : "d84f0bd3-5687-4187-9fd0-97c663070fc3",
   "nombre" : "efectivo / Ocio",
-  "colorHex" : "#888888"
+  "colorHex" : "#00ff00"
 }, {
   "id" : "58e39def-c36f-4afd-a343-4e78393d348a",
   "nombre" : "on line / Regalos",
-  "colorHex" : "#888888"
+  "colorHex" : "#e6e6b3"
 }, {
   "id" : "88e8e857-04c9-44fd-887c-94b10fbc8cfd",
   "nombre" : "con paypal / Ocio",
-  "colorHex" : "#888888"
+  "colorHex" : "#e699b3"
 }, {
   "id" : "3e800948-af32-41cb-bfe0-0bf20feae471",
   "nombre" : "efectivo / Gasolina",
-  "colorHex" : "#888888"
+  "colorHex" : "#e6b3e6"
 }, {
   "id" : "f1e885f5-cdc3-4928-92fa-f6a06bcc2c6b",
   "nombre" : "con tarjeta / Reparaciones",
-  "colorHex" : "#888888"
+  "colorHex" : "#b3e6e6"
 }, {
   "id" : "e5daca91-75a1-411c-8150-36e9f26f7fe0",
   "nombre" : "on line / Transporte Público",
